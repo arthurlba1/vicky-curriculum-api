@@ -8,11 +8,6 @@ import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return this.usersService.create(createUserDto);
-  }
-
   @Get()
   async findAll(): Promise<UserResponseDto[]> {
     return this.usersService.findAll();
