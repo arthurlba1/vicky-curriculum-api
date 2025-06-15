@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: vicky-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: vicky
+      POSTGRES_PASSWORD: vicky123
+      POSTGRES_DB: vicky_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
