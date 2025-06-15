@@ -13,7 +13,6 @@ export class User {
   email: string;
 
   @Column()
-  @Exclude()
   password: string;
 
   @CreateDateColumn()

@@ -1,4 +1,5 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, plainToInstance } from 'class-transformer';
+import { User } from '@/users/entities/user.entity';
 
 @Exclude()
 export class UserResponseDto {
@@ -11,9 +12,24 @@ export class UserResponseDto {
   @Expose()
   email: string;
 
-  @Exclude()
+  password: string;
+
   createdAt: Date;
 
-  @Exclude()
   updatedAt: Date;
+
+  static fromEntity(entity: User): UserResponseDto {
+    return plainToInstance(UserResponseDto, entity, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  static fromEntities(entities: User[]): UserResponseDto[] {
+    return entities.map(entity => this.fromEntity(entity));
+  }
+}
+
+export class UserResponseWithPasswordDto extends UserResponseDto {
+  @Expose()
+  password: string;
 }

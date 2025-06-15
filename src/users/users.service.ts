@@ -2,10 +2,9 @@ import { Injectable, ConflictException, NotFoundException } from '@nestjs/common
 import { plainToInstance } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 
-import { User } from '@/users/entities/user.entity';
 import { UserRepository } from '@/users/repositories/user.repository';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
-import { UserResponseDto } from '@/users/dto/user-response.dto';
+import { UserResponseDto, UserResponseWithPasswordDto } from '@/users/dto/user-response.dto';
 
 
 @Injectable()
@@ -17,7 +16,7 @@ export class UsersService {
 
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) throw new ConflictException('Email already exists');
-
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.userRepository.createUser({
       name,
@@ -25,13 +24,23 @@ export class UsersService {
       password: hashedPassword,
     })
 
-    return plainToInstance(UserResponseDto, user, {
+    return UserResponseDto.fromEntity(user);
+  }
+
+  async findByEmailWithPassword(email: string): Promise<UserResponseWithPasswordDto> {
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return plainToInstance(UserResponseWithPasswordDto, user, {
       excludeExtraneousValues: true,
     });
   }
 
   async findAll(): Promise<UserResponseDto[]> {
-    return this.userRepository.find();
+    const users = await this.userRepository.find();
+    return UserResponseDto.fromEntities(users);
   }
 
   async findOne(id: string): Promise<UserResponseDto> {
@@ -39,16 +48,24 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return plainToInstance(UserResponseDto, user, {
-      excludeExtraneousValues: true,
-    });
+    return UserResponseDto.fromEntity(user);
   }
 
-  async findByEmail(email: string): Promise<UserResponseDto | null> {
-    return this.userRepository.findByEmail(email);
+  async findByEmail(email: string): Promise<UserResponseDto> {
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return UserResponseDto.fromEntity(user);
   }
 
   async remove(id: string): Promise<void> {
-    await this.userRepository.delete(id);
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.userRepository.remove(user);
   }
 }
