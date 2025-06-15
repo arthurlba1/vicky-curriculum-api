@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
+import { APP_GUARD } from '@nestjs/core';
+
+import { UsersModule } from '@/users/users.module';
+import { AuthModule } from '@/auth/auth.module';
+import { JwtAuthGlobalGuard } from '@/auth/guards/jwt-auth.global.guard';
 
 @Module({
   imports: [
@@ -23,6 +27,13 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
     }),
     UsersModule,
+    AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGlobalGuard,
+    },
   ],
 })
 export class AppModule {}

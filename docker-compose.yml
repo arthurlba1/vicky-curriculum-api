@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:latest
-    container_name: vicky-postgres
+    container_name: vicky-postgres-database
     ports:
       - "5432:5432"
     environment:
