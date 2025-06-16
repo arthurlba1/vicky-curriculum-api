@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '@/users/entities/user.entity';
+import { User } from '@/users/user.entity';
 
 export enum ExperienceCategory {
   PROFESSIONAL = 'professional',

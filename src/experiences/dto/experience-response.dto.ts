@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-import { Experience } from '@/experiences/entities/experience.entity';
+import { Experience } from '@/experiences/experience.entity';
 
 @Expose()
 export class ExperienceResponseDto {

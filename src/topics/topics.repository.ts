@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { Topic } from '@/topics/entities/topic.entity';
+import { Topic } from '@/topics/topic.entity';
 import { CreateTopicDto } from '@/topics/dto/create-topic.dto';
 import { UpdateTopicDto } from '@/topics/dto/update-topic.dto';
 

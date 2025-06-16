@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 
-import { Topic } from '@/topics/entities/topic.entity';
+import { Topic } from '@/topics/topic.entity';
 
 @Exclude()
 export class TopicResponseDto {

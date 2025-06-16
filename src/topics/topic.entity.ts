@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Experience } from '@/experiences/entities/experience.entity';
+import { Experience } from '@/experiences/experience.entity';
 import { TopicCategories } from '@/topics/topics.types';
 
 @Entity('topics')

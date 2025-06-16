@@ -1,6 +1,6 @@
 import { IsEnum, IsString, IsDate, IsOptional, IsBoolean, MinLength } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ExperienceCategory } from '@/experiences/entities/experience.entity';
+import { ExperienceCategory } from '@/experiences/experience.entity';
 
 export class CreateExperienceDto {
   @IsEnum(ExperienceCategory)
