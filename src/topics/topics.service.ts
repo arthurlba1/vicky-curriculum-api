@@ -4,7 +4,7 @@ import { CreateTopicDto } from '@/topics/dto/create-topic.dto';
 import { UpdateTopicDto } from '@/topics/dto/update-topic.dto';
 import { TopicResponseDto } from '@/topics/dto/topic-response.dto';
 import { ExperiencesService } from '@/experiences/experiences.service';
-import { TopicsRepository } from '@/topics/repositories/topics.repository';
+import { TopicsRepository } from '@/topics/topics.repository';
 
 @Injectable()
 export class TopicsService {

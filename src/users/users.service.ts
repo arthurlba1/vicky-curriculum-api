@@ -2,7 +2,7 @@ import { Injectable, ConflictException, NotFoundException } from '@nestjs/common
 import { plainToInstance } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 
-import { UserRepository } from '@/users/repositories/user.repository';
+import { UserRepository } from '@/users/user.repository';
 import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { UserResponseDto, UserResponseWithPasswordDto } from '@/users/dto/user-response.dto';
 
