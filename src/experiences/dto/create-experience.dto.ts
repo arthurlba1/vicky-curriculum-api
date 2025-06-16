@@ -31,4 +31,7 @@ export class CreateExperienceDto {
   @IsString()
   @IsOptional()
   location?: string;
+
+  @IsString()
+  userId: string;
 }

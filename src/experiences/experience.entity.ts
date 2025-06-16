@@ -40,11 +40,11 @@ export class Experience {
   location: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column()
-  user_id: string;
+  userId: string;
 
   @CreateDateColumn()
   createdAt: Date;
