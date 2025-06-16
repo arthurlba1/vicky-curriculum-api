@@ -1,13 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '@/users/user.entity';
 
-export enum ExperienceCategory {
-  PROFESSIONAL = 'professional',
-  EDUCATION = 'education',
-  VOLUNTEER = 'volunteer',
-  CERTIFICATION = 'certification',
-  PROJECT = 'project',
-}
+import { User } from '@/users/user.entity';
+import { ExperienceCategory } from '@/experiences/experiences.types';
 
 @Entity('experiences')
 export class Experience {

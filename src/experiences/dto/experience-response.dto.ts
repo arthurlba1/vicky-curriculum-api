@@ -1,6 +1,7 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 import { Experience } from '@/experiences/experience.entity';
+import { TopicResponseDto } from '@/topics/dto/topic-response.dto';
 
 @Expose()
 export class ExperienceResponseDto {
@@ -19,6 +20,10 @@ export class ExperienceResponseDto {
   isCurrent: boolean;
 
   location: string;
+
+  @Expose()
+  @Type(() => TopicResponseDto)
+  topics: TopicResponseDto[];
 
   createdAt: Date;
 

@@ -15,24 +15,28 @@ export class ExperiencesRepository extends Repository<Experience> {
     return this.find({
       where: { userId: userId },
       order: { createdAt: 'DESC' },
+      relations: ['topics'],
     });
   }
 
   async findById(id: string): Promise<Experience | null> {
     return this.findOne({
       where: { id },
+      relations: ['topics'],
     });
   }
 
   async findByIdAndUserId(id: string, userId: string): Promise<Experience | null> {
     return this.findOne({
       where: { id, userId: userId },
+      relations: ['topics'],
     });
   }
 
   async createExperience(createExperienceDto: CreateExperienceDto): Promise<Experience> {
     const experience = this.create(createExperienceDto);
-    return this.save(experience);
+    const savedExperience = await this.save(experience);
+    return this.findById(savedExperience.id);
   }
 
   async updateExperience(id: string, updateExperienceDto: UpdateExperienceDto): Promise<Experience> {
