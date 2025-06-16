@@ -1,0 +1,426 @@
+// Core Programming Languages
+export enum CoreLanguages {
+    JavaScript = "JavaScript",
+    TypeScript = "TypeScript",
+    Python = "Python",
+    Java = "Java",
+    CSharp = "C#",
+    CPlusPlus = "C++",
+    Go = "Go",
+    Ruby = "Ruby",
+    PHP = "PHP",
+    Kotlin = "Kotlin",
+    Swift = "Swift",
+    Rust = "Rust",
+    Dart = "Dart",
+    Scala = "Scala",
+  }
+  
+  // Frontend Development
+  export enum FrontendTechnologies {
+    HTML = "HTML",
+    CSS = "CSS",
+    SASS = "SASS / SCSS",
+    React = "React.js",
+    Next = "Next.js",
+    Vue = "Vue.js",
+    Nuxt = "Nuxt.js",
+    Angular = "Angular",
+    Svelte = "Svelte",
+    Webpack = "Webpack",
+    Vite = "Vite",
+    Tailwind = "Tailwind CSS",
+    Bootstrap = "Bootstrap",
+    JQuery = "jQuery",
+  }
+  
+  // Backend Development
+  export enum BackendTechnologies {
+    Node = "Node.js",
+    Express = "Express.js",
+    Nest = "NestJS",
+    Koa = "Koa.js",
+    Hapi = "Hapi.js",
+    Fastify = "Fastify",
+    Django = "Django",
+    Flask = "Flask",
+    SpringBoot = "Spring Boot",
+    AspNetCore = "ASP.NET Core",
+    Rails = "Ruby on Rails",
+    Laravel = "Laravel",
+    Phoenix = "Phoenix",
+    GoFiber = "Go Fiber",
+    GoGin = "Go Gin",
+  }
+
+  export enum MobileTechnologies {
+    ReactNative = "React Native",
+    Flutter = "Flutter",
+    Ionic = "Ionic",
+    Kotlin = "Kotlin",
+    Swift = "Swift",
+    Expo = "Expo",
+  }  
+  // DevOps & Infrastructure
+  export enum DevOpsTools {
+    Docker = "Docker",
+    Kubernetes = "Kubernetes",
+    GitHubActions = "GitHub Actions",
+    GitLabCI = "GitLab CI",
+    CircleCI = "CircleCI",
+    Jenkins = "Jenkins",
+    Terraform = "Terraform",
+    Ansible = "Ansible",
+    Nginx = "Nginx",
+    Apache = "Apache",
+    Prometheus = "Prometheus",
+    Grafana = "Grafana",
+    Datadog = "Datadog",
+    NewRelic = "New Relic",
+    AWS = "AWS",
+    Azure = "Azure",
+    GCP = "Google Cloud Platform",
+    Firebase = "Firebase",
+    Vercel = "Vercel",
+    Netlify = "Netlify",
+    Git = "Git",
+  }
+  
+  // Databases
+  export enum Databases {
+    PostgreSQL = "PostgreSQL",
+    MySQL = "MySQL",
+    MariaDB = "MariaDB",
+    SQLite = "SQLite",
+    MongoDB = "MongoDB",
+    Redis = "Redis",
+    Cassandra = "Cassandra",
+    DynamoDB = "DynamoDB",
+    Elasticsearch = "Elasticsearch",
+    Firestore = "Firestore",
+    Neo4j = "Neo4j",
+    Supabase = "Supabase",
+    PlanetScale = "PlanetScale",
+    CockroachDB = "CockroachDB",
+  }
+
+  export enum DatabaseTools {
+    Prisma = "Prisma",
+    TypeORM = "TypeORM",
+    Sequelize = "Sequelize",
+    Hibernate = "Hibernate",
+    MyBatis = "MyBatis",
+    Mongoose = "Mongoose",
+    Drizzle = "Drizzle",
+   }
+  
+  // Message Brokers & Queues
+  export enum Messaging {
+    RabbitMQ = "RabbitMQ",
+    Kafka = "Apache Kafka",
+    SQS = "Amazon SQS",
+    RedisPubSub = "Redis Pub/Sub",
+    MQTT = "MQTT",
+    GooglePubSub = "Google Pub/Sub",
+    AzureServiceBus = "Azure Service Bus",
+    BullMQ = "BullMQ",
+  }
+  
+  // Architecture & Patterns
+  export enum ArchitecturePatterns {
+    REST = "REST API",
+    GraphQL = "GraphQL",
+    GRPC = "gRPC",
+    WebSockets = "WebSockets",
+    Microservices = "Microservices",
+    Monoliths = "Monoliths",
+    EventDriven = "Event-driven Architecture",
+    CleanArchitecture = "Clean Architecture",
+    DDD = "Domain-Driven Design",
+    CQRS = "CQRS",
+    BFF = "Backend For Frontend",
+    Serverless = "Serverless",
+  }
+  
+  // Security
+  export enum SecurityTopics {
+    OAuth2 = "OAuth2",
+    OpenID = "OpenID Connect",
+    JWT = "JWT",
+    APIKey = "API Key",
+    HTTPS = "HTTPS / TLS",
+    CORS = "CORS",
+    OWASP = "OWASP Top 10",
+    CSRF = "CSRF",
+    XSS = "XSS",
+    SQLInjection = "SQL Injection",
+    Auth0 = "Auth0",
+    FirebaseAuth = "Firebase Auth",
+    RBAC = "RBAC",
+    ABAC = "ABAC",
+  }
+  
+  // Testing & Quality
+  export enum TestingTools {
+    Unit = "Unit Testing",
+    Integration = "Integration Testing",
+    E2E = "End-to-End Testing",
+    TDD = "TDD",
+    BDD = "BDD",
+    Jest = "Jest",
+    Vitest = "Vitest",
+    Cypress = "Cypress",
+    Playwright = "Playwright",
+    Selenium = "Selenium",
+    Postman = "Postman",
+    Insomnia = "Insomnia",
+    SonarQube = "SonarQube",
+  }
+  
+  // AI / Machine Learning
+  export enum AITools {
+    TensorFlow = "TensorFlow",
+    PyTorch = "PyTorch",
+    ScikitLearn = "scikit-learn",
+    OpenCV = "OpenCV",
+    HuggingFace = "Hugging Face",
+    LangChain = "LangChain",
+    GPT = "GPT / LLMs",
+  }
+  
+  // Tooling & Utilities
+  export enum Utilities {
+    ESLint = "ESLint",
+    Prettier = "Prettier",
+    Husky = "Husky",
+    LintStaged = "Lint-staged",
+    Storybook = "Storybook",
+    Figma = "Figma",
+    Swagger = "Swagger / OpenAPI",
+    Zod = "Zod",
+    Yup = "Yup",
+    I18n = "i18n",
+  }
+  
+  // Roles
+  export enum Roles {
+    Frontend = "Frontend Developer",
+    Backend = "Backend Developer",
+    Fullstack = "Full Stack Developer",
+    DevOps = "DevOps Engineer",
+    QA = "QA Engineer",
+    DataScientist = "Data Scientist",
+    Architect = "Software Architect",
+    SecurityEngineer = "Security Engineer",
+    MobileDev = "Mobile Developer",
+    TechLead = "Technical Lead",
+    PlatformEngineer = "Platform Engineer",
+    CloudEngineer = "Cloud Engineer",
+    DevOpsEngineer = "DevOps Engineer",
+    DataEngineer = "Data Engineer",
+    MachineLearningEngineer = "Machine Learning Engineer",
+    AIEngineer = "AI Engineer",
+  }
+
+export enum TopicCategories {
+  // Experience Summary
+  ExperienceSummary = "Experience Summary",
+
+
+  // Core Languages
+  JavaScript = CoreLanguages.JavaScript,
+  TypeScript = CoreLanguages.TypeScript,
+  Python = CoreLanguages.Python,
+  Java = CoreLanguages.Java,
+  CSharp = CoreLanguages.CSharp,
+  CPlusPlus = CoreLanguages.CPlusPlus,
+  Go = CoreLanguages.Go,
+  Ruby = CoreLanguages.Ruby,
+  PHP = CoreLanguages.PHP,
+  Kotlin = CoreLanguages.Kotlin,
+  Swift = CoreLanguages.Swift,
+  Rust = CoreLanguages.Rust,
+  Dart = CoreLanguages.Dart,
+  Scala = CoreLanguages.Scala,
+
+  // Frontend Technologies
+  HTML = FrontendTechnologies.HTML,
+  CSS = FrontendTechnologies.CSS,
+  SASS = FrontendTechnologies.SASS,
+  React = FrontendTechnologies.React,
+  Next = FrontendTechnologies.Next,
+  Vue = FrontendTechnologies.Vue,
+  Nuxt = FrontendTechnologies.Nuxt,
+  Angular = FrontendTechnologies.Angular,
+  Svelte = FrontendTechnologies.Svelte,
+  Webpack = FrontendTechnologies.Webpack,
+  Vite = FrontendTechnologies.Vite,
+  Tailwind = FrontendTechnologies.Tailwind,
+  Bootstrap = FrontendTechnologies.Bootstrap,
+  JQuery = FrontendTechnologies.JQuery,
+
+  // Backend Technologies
+  Node = BackendTechnologies.Node,
+  Express = BackendTechnologies.Express,
+  Nest = BackendTechnologies.Nest,
+  Koa = BackendTechnologies.Koa,
+  Hapi = BackendTechnologies.Hapi,
+  Fastify = BackendTechnologies.Fastify,
+  Django = BackendTechnologies.Django,
+  Flask = BackendTechnologies.Flask,
+  SpringBoot = BackendTechnologies.SpringBoot,
+  AspNetCore = BackendTechnologies.AspNetCore,
+  Rails = BackendTechnologies.Rails,
+  Laravel = BackendTechnologies.Laravel,
+  Phoenix = BackendTechnologies.Phoenix,
+  GoFiber = BackendTechnologies.GoFiber,
+  GoGin = BackendTechnologies.GoGin,
+
+  // Mobile Technologies
+  ReactNative = MobileTechnologies.ReactNative,
+  Flutter = MobileTechnologies.Flutter,
+  Ionic = MobileTechnologies.Ionic,
+  Expo = MobileTechnologies.Expo,
+
+  // DevOps & Infrastructure
+  Docker = DevOpsTools.Docker,
+  Kubernetes = DevOpsTools.Kubernetes,
+  GitHubActions = DevOpsTools.GitHubActions,
+  GitLabCI = DevOpsTools.GitLabCI,
+  CircleCI = DevOpsTools.CircleCI,
+  Jenkins = DevOpsTools.Jenkins,
+  Terraform = DevOpsTools.Terraform,
+  Ansible = DevOpsTools.Ansible,
+  Nginx = DevOpsTools.Nginx,
+  Apache = DevOpsTools.Apache,
+  Prometheus = DevOpsTools.Prometheus,
+  Grafana = DevOpsTools.Grafana,
+  Datadog = DevOpsTools.Datadog,
+  NewRelic = DevOpsTools.NewRelic,
+  AWS = DevOpsTools.AWS,
+  Azure = DevOpsTools.Azure,
+  GCP = DevOpsTools.GCP,
+  Firebase = DevOpsTools.Firebase,
+  Vercel = DevOpsTools.Vercel,
+  Netlify = DevOpsTools.Netlify,
+  Git = DevOpsTools.Git,
+
+  // Databases
+  PostgreSQL = Databases.PostgreSQL,
+  MySQL = Databases.MySQL,
+  MariaDB = Databases.MariaDB,
+  SQLite = Databases.SQLite,
+  MongoDB = Databases.MongoDB,
+  Redis = Databases.Redis,
+  Cassandra = Databases.Cassandra,
+  DynamoDB = Databases.DynamoDB,
+  Elasticsearch = Databases.Elasticsearch,
+  Firestore = Databases.Firestore,
+  Neo4j = Databases.Neo4j,
+  Supabase = Databases.Supabase,
+  PlanetScale = Databases.PlanetScale,
+  CockroachDB = Databases.CockroachDB,
+
+  // Database Tools
+  Prisma = DatabaseTools.Prisma,
+  TypeORM = DatabaseTools.TypeORM,
+  Sequelize = DatabaseTools.Sequelize,
+  Hibernate = DatabaseTools.Hibernate,
+  MyBatis = DatabaseTools.MyBatis,
+  Mongoose = DatabaseTools.Mongoose,
+  Drizzle = DatabaseTools.Drizzle,
+
+  // Message Brokers & Queues
+  RabbitMQ = Messaging.RabbitMQ,
+  Kafka = Messaging.Kafka,
+  SQS = Messaging.SQS,
+  RedisPubSub = Messaging.RedisPubSub,
+  MQTT = Messaging.MQTT,
+  GooglePubSub = Messaging.GooglePubSub,
+  AzureServiceBus = Messaging.AzureServiceBus,
+  BullMQ = Messaging.BullMQ,
+
+  // Architecture & Patterns
+  REST = ArchitecturePatterns.REST,
+  GraphQL = ArchitecturePatterns.GraphQL,
+  GRPC = ArchitecturePatterns.GRPC,
+  WebSockets = ArchitecturePatterns.WebSockets,
+  Microservices = ArchitecturePatterns.Microservices,
+  Monoliths = ArchitecturePatterns.Monoliths,
+  EventDriven = ArchitecturePatterns.EventDriven,
+  CleanArchitecture = ArchitecturePatterns.CleanArchitecture,
+  DDD = ArchitecturePatterns.DDD,
+  CQRS = ArchitecturePatterns.CQRS,
+  BFF = ArchitecturePatterns.BFF,
+  Serverless = ArchitecturePatterns.Serverless,
+
+  // Security
+  OAuth2 = SecurityTopics.OAuth2,
+  OpenID = SecurityTopics.OpenID,
+  JWT = SecurityTopics.JWT,
+  APIKey = SecurityTopics.APIKey,
+  HTTPS = SecurityTopics.HTTPS,
+  CORS = SecurityTopics.CORS,
+  OWASP = SecurityTopics.OWASP,
+  CSRF = SecurityTopics.CSRF,
+  XSS = SecurityTopics.XSS,
+  SQLInjection = SecurityTopics.SQLInjection,
+  Auth0 = SecurityTopics.Auth0,
+  FirebaseAuth = SecurityTopics.FirebaseAuth,
+  RBAC = SecurityTopics.RBAC,
+  ABAC = SecurityTopics.ABAC,
+
+  // Testing & Quality
+  Unit = TestingTools.Unit,
+  Integration = TestingTools.Integration,
+  E2E = TestingTools.E2E,
+  TDD = TestingTools.TDD,
+  BDD = TestingTools.BDD,
+  Jest = TestingTools.Jest,
+  Vitest = TestingTools.Vitest,
+  Cypress = TestingTools.Cypress,
+  Playwright = TestingTools.Playwright,
+  Selenium = TestingTools.Selenium,
+  Postman = TestingTools.Postman,
+  Insomnia = TestingTools.Insomnia,
+  SonarQube = TestingTools.SonarQube,
+
+  // AI / Machine Learning
+  TensorFlow = AITools.TensorFlow,
+  PyTorch = AITools.PyTorch,
+  ScikitLearn = AITools.ScikitLearn,
+  OpenCV = AITools.OpenCV,
+  HuggingFace = AITools.HuggingFace,
+  LangChain = AITools.LangChain,
+  GPT = AITools.GPT,
+
+  // Tooling & Utilities
+  ESLint = Utilities.ESLint,
+  Prettier = Utilities.Prettier,
+  Husky = Utilities.Husky,
+  LintStaged = Utilities.LintStaged,
+  Storybook = Utilities.Storybook,
+  Figma = Utilities.Figma,
+  Swagger = Utilities.Swagger,
+  Zod = Utilities.Zod,
+  Yup = Utilities.Yup,
+  I18n = Utilities.I18n,
+
+  // Roles
+  Frontend = Roles.Frontend,
+  Backend = Roles.Backend,
+  Fullstack = Roles.Fullstack,
+  DevOps = Roles.DevOps,
+  QA = Roles.QA,
+  DataScientist = Roles.DataScientist,
+  Architect = Roles.Architect,
+  SecurityEngineer = Roles.SecurityEngineer,
+  MobileDev = Roles.MobileDev,
+  TechLead = Roles.TechLead,
+  PlatformEngineer = Roles.PlatformEngineer,
+  CloudEngineer = Roles.CloudEngineer,
+  DevOpsEngineer = Roles.DevOpsEngineer,
+  DataEngineer = Roles.DataEngineer,
+  MachineLearningEngineer = Roles.MachineLearningEngineer,
+  AIEngineer = Roles.AIEngineer, 
+}
