@@ -88,3 +88,5 @@ The documentation provides a detailed overview of all available endpoints, inclu
   - `DELETE /topics/:id`: Delete a topic.
 
 The Swagger UI allows you to interact with the API directly from your browser, making it easy to test and explore the available functionality.
+
+*MIT © 2025 Arthur Araujo*
