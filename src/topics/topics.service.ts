@@ -14,7 +14,7 @@ export class TopicsService {
   ) {}
 
   async create(userId: string, createTopicDto: CreateTopicDto): Promise<TopicResponseDto> {
-    await this.verifyExperienceOwnership(userId, createTopicDto.experience_id);
+    await this.verifyExperienceOwnership(userId, createTopicDto.experienceId);
 
     const topic = await this.topicsRepository.createTopic(createTopicDto);
     return TopicResponseDto.fromEntity(topic);
@@ -31,7 +31,7 @@ export class TopicsService {
   async findOne(userId: string, id: string): Promise<TopicResponseDto> {
     const topic = await this.topicsRepository.findById(id);
 
-    await this.verifyExperienceOwnership(userId, topic.experience_id);
+    await this.verifyExperienceOwnership(userId, topic.experienceId);
 
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);
@@ -49,7 +49,7 @@ export class TopicsService {
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);
     }
-    await this.verifyExperienceOwnership(userId, topic.experience_id);
+    await this.verifyExperienceOwnership(userId, topic.experienceId);
     const updatedTopic = await this.topicsRepository.updateTopic(id, updateTopicDto);
 
     return TopicResponseDto.fromEntity(updatedTopic);
@@ -60,7 +60,7 @@ export class TopicsService {
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);
     }
-    await this.verifyExperienceOwnership(userId, topic.experience_id);
+    await this.verifyExperienceOwnership(userId, topic.experienceId);
     await this.topicsRepository.deleteTopic(id);
   }
 

@@ -45,4 +45,4 @@ export class Experience {
 
   @UpdateDateColumn()
   updatedAt: Date;
-} 
+}

@@ -13,7 +13,7 @@ export class TopicsRepository extends Repository<Topic> {
 
   async findByExperienceId(experienceId: string): Promise<Topic[]> {
     return this.find({
-      where: { experience_id: experienceId },
+      where: { experienceId },
       order: { createdAt: 'DESC' },
     });
   }

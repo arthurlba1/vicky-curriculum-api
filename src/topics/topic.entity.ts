@@ -9,24 +9,24 @@ export class Topic {
   id: string;
 
   @Column({
-    type: 'enum',
-    enum: TopicCategories,
+    type: 'varchar',
+    length: 100
   })
-  category: TopicCategories;
+  category: string;
 
   @Column({ type: 'text' })
   description: string;
 
   @ManyToOne(() => Experience, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'experience_id' })
+  @JoinColumn({ name: 'experienceId' })
   experience: Experience;
 
   @Column()
-  experience_id: string;
+  experienceId: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-} 
+}

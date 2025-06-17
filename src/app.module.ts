@@ -6,6 +6,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from '@/users/users.module';
 import { AuthModule } from '@/auth/auth.module';
 import { JwtAuthGlobalGuard } from '@/auth/guards/jwt-auth.global.guard';
+import { ExperiencesModule } from '@/experiences/experiences.module';
+import { TopicsModule } from '@/topics/topics.module';
 
 @Module({
   imports: [
@@ -22,12 +24,14 @@ import { JwtAuthGlobalGuard } from '@/auth/guards/jwt-auth.global.guard';
         password: configService.get('DB_PASSWORD', 'vicky123'),
         database: configService.get('DB_DATABASE', 'vicky_db'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV', 'development') === 'development',
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
     UsersModule,
     AuthModule,
+    ExperiencesModule,
+    TopicsModule,
   ],
   providers: [
     {

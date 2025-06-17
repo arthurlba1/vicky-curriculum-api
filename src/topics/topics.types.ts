@@ -226,7 +226,6 @@ export enum TopicCategories {
   // Experience Summary
   ExperienceSummary = "Experience Summary",
 
-
   // Core Languages
   JavaScript = CoreLanguages.JavaScript,
   TypeScript = CoreLanguages.TypeScript,
