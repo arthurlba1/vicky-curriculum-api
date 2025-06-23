@@ -8,6 +8,9 @@ import { swaggerConfig } from '@/config/swagger.config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
+  // Set global API prefix
+  app.setGlobalPrefix('api');
+  
   // Enable CORS
   app.enableCors();
   
@@ -19,7 +22,7 @@ async function bootstrap() {
 
   // Setup Swagger
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(3000);
 }

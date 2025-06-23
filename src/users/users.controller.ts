@@ -21,17 +21,6 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get('me')
-  @ApiOperation({ summary: 'Get current user profile' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'Current user profile',
-    type: UserResponseDto
-  })
-  async getLoggedUser(@CurrentUser() user: UserResponseDto): Promise<UserResponseDto> {
-    return this.usersService.findOne(user.id);
-  }
-
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ 

@@ -2,10 +2,11 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
-import { UsersService } from '@/users/users.service';
-import { CreateUserDto } from '@/users/dto/create-user.dto';
 import { LoginDto } from '@/auth/dto/login.dto';
 import { AuthResponseDto } from '@/auth/dto/auth-response.dto';
+import { UserResponseDto } from '@/users/dto/user-response.dto';
+import { UsersService } from '@/users/users.service';
+import { CreateUserDto } from '@/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,9 +15,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(createUserDto: CreateUserDto): Promise<{ message: string }> {
-    await this.usersService.create(createUserDto);
-    return { message: 'User created successfully' };
+  async register(createUserDto: CreateUserDto): Promise<AuthResponseDto> {
+    const user = await this.usersService.create(createUserDto);
+
+    const accessToken = this.generateToken(user.id);
+    return AuthResponseDto.fromToken(accessToken);
   }
 
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
@@ -32,6 +35,11 @@ export class AuthService {
 
     const accessToken = this.generateToken(user.id);
     return AuthResponseDto.fromToken(accessToken);
+  }
+
+  async findLoggedUser(userId: string): Promise<UserResponseDto> {
+    const user = await this.usersService.findOne(userId);
+    return UserResponseDto.fromEntity(user);
   }
 
   private generateToken(userId: string): string {
