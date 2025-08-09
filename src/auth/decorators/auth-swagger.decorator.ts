@@ -30,6 +30,22 @@ export function ApiRegisterDocumentation() {
       }
     }),
     ApiResponse({ 
+      status: STATUS_CODES.ERROR.BAD_REQUEST, 
+      description: 'Bad request',
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(ApiResponseDto) },
+          {
+            properties: {
+              message: { type: 'string', example: 'Bad request' },
+              error: { type: 'string', example: 'Bad Request' },
+              statusCode: { type: 'number', example: STATUS_CODES.ERROR.BAD_REQUEST }
+            }
+          }
+        ]
+      }
+    }),
+    ApiResponse({ 
       status: STATUS_CODES.ERROR.CONFLICT, 
       description: 'Email already exists',
       schema: {
@@ -38,6 +54,7 @@ export function ApiRegisterDocumentation() {
           {
             properties: {
               message: { type: 'string', example: 'Email already exists' },
+              error: { type: 'string', example: 'Conflict' },
               statusCode: { type: 'number', example: STATUS_CODES.ERROR.CONFLICT }
             }
           }
@@ -69,6 +86,22 @@ export function ApiLoginDocumentation() {
       }
     }),
     ApiResponse({ 
+      status: STATUS_CODES.ERROR.BAD_REQUEST, 
+      description: 'Bad request',
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(ApiResponseDto) },
+          {
+            properties: {
+              message: { type: 'string', example: 'Bad request' },
+              error: { type: 'string', example: 'Bad Request' },
+              statusCode: { type: 'number', example: STATUS_CODES.ERROR.BAD_REQUEST }
+            }
+          }
+        ]
+      }
+    }),
+    ApiResponse({ 
       status: STATUS_CODES.ERROR.UNAUTHORIZED, 
       description: 'Invalid credentials',
       schema: {
@@ -77,6 +110,7 @@ export function ApiLoginDocumentation() {
           {
             properties: {
               message: { type: 'string', example: 'Invalid credentials' },
+              error: { type: 'string', example: 'Unauthorized' },
               statusCode: { type: 'number', example: STATUS_CODES.ERROR.UNAUTHORIZED }
             }
           }
@@ -92,6 +126,7 @@ export function ApiLoginDocumentation() {
           {
             properties: {
               message: { type: 'string', example: 'User not found' },
+              error: { type: 'string', example: 'Not Found' },
               statusCode: { type: 'number', example: STATUS_CODES.ERROR.NOT_FOUND }
             }
           }
@@ -130,6 +165,7 @@ export function ApiGetMeDocumentation() {
           {
             properties: {
               message: { type: 'string', example: 'Unauthorized' },
+              error: { type: 'string', example: 'Unauthorized' },
               statusCode: { type: 'number', example: STATUS_CODES.ERROR.UNAUTHORIZED }
             }
           }
@@ -145,6 +181,7 @@ export function ApiGetMeDocumentation() {
           {
             properties: {
               message: { type: 'string', example: 'User not found' },
+              error: { type: 'string', example: 'Not Found' },
               statusCode: { type: 'number', example: STATUS_CODES.ERROR.NOT_FOUND }
             }
           }
@@ -152,4 +189,4 @@ export function ApiGetMeDocumentation() {
       }
     })
   );
-} 
+}
