@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
 
 import { CreateTopicDto } from '@/topics/dto/create-topic.dto';
 import { UpdateTopicDto } from '@/topics/dto/update-topic.dto';
@@ -10,6 +10,7 @@ import { TopicsRepository } from '@/topics/topics.repository';
 export class TopicsService {
   constructor(
     private readonly topicsRepository: TopicsRepository,
+    @Inject(forwardRef(() => ExperiencesService))
     private readonly experiencesService: ExperiencesService,
   ) {}
 

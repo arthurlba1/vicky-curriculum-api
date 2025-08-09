@@ -1,15 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString, IsUUID, MinLength } from 'class-validator';
-
-import { TopicCategories } from '@/topics/topics.types';
+import { IsString, IsUUID, MinLength } from 'class-validator';
 
 export class CreateTopicDto {
   @ApiProperty({ 
-    enum: TopicCategories,
-    description: 'The category of the topic'
+    description: 'The category of the topic',
+    example: 'Backend'
   })
-  @IsEnum(TopicCategories)
-  category: TopicCategories;
+  @IsString()
+  category: string;
 
   @ApiProperty({ 
     description: 'The description of the topic',
@@ -25,4 +23,4 @@ export class CreateTopicDto {
   @IsString()
   @IsUUID()
   experienceId: string;
-} 
+}

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsString, IsDate, IsOptional, IsBoolean, MinLength } from 'class-validator';
+import { IsEnum, IsString, IsDate, IsOptional, IsBoolean, MinLength, IsArray, IsObject, ValidateNested, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
 import { ExperienceCategory } from '@/experiences/experiences.types';
@@ -23,7 +23,7 @@ export class CreateExperienceDto {
   @Type(() => Date)
   @IsDate()
   @IsOptional()
-  startDate: Date;
+  startDate?: Date;
 
   @ApiPropertyOptional()
   @Type(() => Date)
@@ -41,6 +41,39 @@ export class CreateExperienceDto {
   @IsOptional()
   location?: string;
 
+  @ApiPropertyOptional()
   @IsString()
-  userId: string;
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({ 
+    description: 'Array of skills used in this experience',
+    example: ['csharp', 'rust', 'javascript']
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  skills: string[];
+
+  @ApiProperty({ 
+    description: 'Object containing descriptions for each skill',
+    example: {
+      'csharp': 'Used C# for backend development with Entity Framework',
+      'rust': 'Built high-performance microservices using Rust',
+      'javascript': 'Developed interactive frontend features'
+    }
+  })
+  @IsObject()
+  skillsDescription: Record<string, string>;
+}
+
+export class CreateExperiencesDto {
+  @ApiProperty({ 
+    description: 'Array of experiences to create',
+    type: [CreateExperienceDto]
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateExperienceDto)
+  experiences: CreateExperienceDto[];
 }

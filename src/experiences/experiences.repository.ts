@@ -33,8 +33,8 @@ export class ExperiencesRepository extends Repository<Experience> {
     });
   }
 
-  async createExperience(createExperienceDto: CreateExperienceDto): Promise<Experience> {
-    const experience = this.create(createExperienceDto);
+  async createExperience(createExperienceDto: CreateExperienceDto, userId: string): Promise<Experience> {
+    const experience = this.create({ ...createExperienceDto, userId });
     const savedExperience = await this.save(experience);
     return this.findById(savedExperience.id);
   }

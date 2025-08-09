@@ -1,7 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 import { User } from '@/users/user.entity';
 import { ExperienceCategory } from '@/experiences/experiences.types';
+import { Topic } from '@/topics/topic.entity';
 
 @Entity('experiences')
 export class Experience {
@@ -32,6 +33,12 @@ export class Experience {
 
   @Column({ nullable: true })
   location: string;
+
+  @Column({ nullable: true })
+  description: string;
+
+  @OneToMany(() => Topic, (topic) => topic.experience, { cascade: true })
+  topics: Topic[];
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })

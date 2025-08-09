@@ -3,42 +3,54 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiExtraMod
 
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { ExperiencesService } from '@/experiences/experiences.service';
-import { CreateExperienceDto } from '@/experiences/dto/create-experience.dto';
+import { CreateExperienceDto, CreateExperiencesDto } from '@/experiences/dto/create-experience.dto';
 import { UpdateExperienceDto } from '@/experiences/dto/update-experience.dto';
 import { ExperienceResponseDto } from '@/experiences/dto/experience-response.dto';
 import { UserResponseDto } from '@/users/dto/user-response.dto';
+import { ApiCreateBatchExperienceDocumentation, ApiCreateExperienceDocumentation, ApiGetAllExperiencesDocumentation } from '@/experiences/decorators/experience-swagger.decorator';
+import { ApiResponseDto } from '@/common/dto/api-response.dto';
+import { STATUS_CODES } from '@/common/types/status';
 
 @ApiTags('experiences')
 @ApiBearerAuth('JWT')
-@ApiExtraModels(ExperienceResponseDto)
 @Controller('experiences')
 export class ExperiencesController {
   constructor(private readonly experiencesService: ExperiencesService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new experience' })
-  @ApiBody({ type: CreateExperienceDto })
-  @ApiResponse({ 
-    status: 201, 
-    description: 'Experience created successfully',
-    type: ExperienceResponseDto
-  })
-  create(
+  @ApiCreateExperienceDocumentation()
+  async create(
     @CurrentUser() user: UserResponseDto,
     @Body() createExperienceDto: CreateExperienceDto,
-  ): Promise<ExperienceResponseDto> {
-    return this.experiencesService.create(user.id, createExperienceDto);
+  ): Promise<ApiResponseDto<void>> {
+    return {
+      data: await this.experiencesService.create(user.id, createExperienceDto),
+      message: 'Experience created successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.CREATED,
+    };
+  }
+
+  @Post('batch')
+  @ApiCreateBatchExperienceDocumentation()
+  async createBatch(
+    @CurrentUser() user: UserResponseDto,
+    @Body() createExperiencesDto: CreateExperiencesDto,
+  ): Promise<ApiResponseDto<void>> {
+    return {
+      data: await this.experiencesService.createBatch(user.id, createExperiencesDto),
+      message: 'Experiences created successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.CREATED,
+    };
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all experiences for the current user' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'List of experiences',
-    type: [ExperienceResponseDto]
-  })
-  findAll(@CurrentUser() user: UserResponseDto): Promise<ExperienceResponseDto[]> {
-    return this.experiencesService.findAll(user.id);
+  @ApiGetAllExperiencesDocumentation()
+  async findAll(@CurrentUser() user: UserResponseDto): Promise<ApiResponseDto<ExperienceResponseDto[]>> {
+    return {
+      data: await this.experiencesService.findAll(user.id),
+      message: 'Experiences retrieved successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
+    };
   }
 
   @Get(':id')

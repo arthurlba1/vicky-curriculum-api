@@ -30,6 +30,9 @@ export class ExperienceResponseDto {
   @ApiProperty()
   location: string;
 
+  @ApiProperty()
+  description: string;
+
   @ApiProperty({ type: [TopicResponseDto] })
   @Expose()
   @Type(() => TopicResponseDto)

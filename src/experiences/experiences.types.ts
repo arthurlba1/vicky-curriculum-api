@@ -1,6 +1,6 @@
 export enum ExperienceCategory {
     PROFESSIONAL = 'professional',
-    EDUCATION = 'education',
+    ACADEMIC = 'academic',
     VOLUNTEER = 'volunteer',
     CERTIFICATION = 'certification',
     PROJECT = 'project',
