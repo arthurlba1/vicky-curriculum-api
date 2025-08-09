@@ -1,8 +1,11 @@
 import { Controller, Get, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+
+import { ApiResponseDto } from '@/common/dto/api-response.dto';
 import { UsersService } from '@/users/users.service';
 import { UserResponseDto } from '@/users/dto/user-response.dto';
-import { CurrentUser } from '@/auth/decorators/current-user.decorator';
+import { ApiDeleteUserByIdDocumentation, ApiGetAllUsersDocumentation, ApiGetUserByIdDocumentation } from '@/users/decorators/user-swagger.decorator';
+import { STATUS_CODES } from '@/common/types/status';
 
 @ApiTags('users')
 @ApiBearerAuth('JWT-auth')
@@ -11,42 +14,32 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'List of all users',
-    type: [UserResponseDto]
-  })
-  async findAll(): Promise<UserResponseDto[]> {
-    return this.usersService.findAll();
+  @ApiGetAllUsersDocumentation()
+  async findAll(): Promise<ApiResponseDto<UserResponseDto[]>> {
+    return {
+      data: await this.usersService.findAll(),
+      message: 'Users retrieved successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
+    };
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get user by ID' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'User found',
-    type: UserResponseDto
-  })
-  @ApiResponse({ 
-    status: 404, 
-    description: 'User not found'
-  })
-  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserResponseDto> {
-    return this.usersService.findOne(id);
+  @ApiGetUserByIdDocumentation()
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<ApiResponseDto<UserResponseDto>> {
+    return {
+      data: await this.usersService.findOne(id),
+      message: 'User retrieved successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
+    };
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete user by ID' })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'User deleted successfully'
-  })
-  @ApiResponse({ 
-    status: 404, 
-    description: 'User not found'
-  })
-  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return this.usersService.remove(id);
+  @ApiDeleteUserByIdDocumentation()
+  async remove(@Param('id', ParseUUIDPipe) id: string): Promise<ApiResponseDto<void>> {
+    await this.usersService.remove(id);
+    return {
+      message: 'User deleted successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
+    };
   }
 }
