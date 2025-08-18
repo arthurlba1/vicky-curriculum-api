@@ -65,6 +65,11 @@ export class CreateExperienceDto {
   })
   @IsObject()
   skillsDescription: Record<string, string>;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  utilityLink?: string;
 }
 
 export class CreateExperiencesDto {

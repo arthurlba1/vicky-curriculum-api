@@ -35,6 +35,9 @@ export class Experience {
   location: string;
 
   @Column({ nullable: true })
+  utilityLink: string;
+
+  @Column({ nullable: true })
   description: string;
 
   @OneToMany(() => Topic, (topic) => topic.experience, { cascade: true })

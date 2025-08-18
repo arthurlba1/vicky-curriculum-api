@@ -31,6 +31,9 @@ export class ExperienceResponseDto {
   location: string;
 
   @ApiProperty()
+  utilityLink: string;
+
+  @ApiProperty()
   description: string;
 
   @ApiProperty({ type: [TopicResponseDto] })

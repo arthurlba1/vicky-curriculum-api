@@ -41,11 +41,7 @@ export class TopicsService {
     return TopicResponseDto.fromEntity(topic);
   }
 
-  async update(
-    userId: string,
-    id: string,
-    updateTopicDto: UpdateTopicDto,
-  ): Promise<TopicResponseDto> {
+  async update(userId: string, id: string, updateTopicDto: UpdateTopicDto): Promise<TopicResponseDto> {
     const topic = await this.topicsRepository.findById(id);
     if (!topic) {
       throw new NotFoundException(`Topic with ID ${id} not found`);

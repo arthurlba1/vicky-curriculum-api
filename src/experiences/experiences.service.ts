@@ -6,6 +6,7 @@ import { ExperienceResponseDto } from '@/experiences/dto/experience-response.dto
 import { ExperiencesRepository } from '@/experiences/experiences.repository';
 import { TopicsService } from '@/topics/topics.service';
 import { CreateTopicDto } from '@/topics/dto/create-topic.dto';
+import { UpdateTopicDto } from '@/topics/dto/update-topic.dto';
 
 @Injectable()
 export class ExperiencesService {
@@ -50,19 +51,28 @@ export class ExperiencesService {
     updateExperienceDto: UpdateExperienceDto,
   ): Promise<ExperienceResponseDto> {
     const experience = await this.experiencesRepository.findByIdAndUserId(id, userId);
-    if (!experience) {
-      throw new NotFoundException(`Experience with ID ${id} not found`);
+    if (!experience) throw new NotFoundException(`Experience with ID ${id} not found`);
+
+    const { skills, skillsDescription, ...updateExperiencePayload } = updateExperienceDto;
+
+    const updatedExperience = await this.experiencesRepository.updateExperience(id, updateExperiencePayload as any);
+
+    if (Array.isArray(skills)) {
+      await this.syncTopicsForSkills(
+        userId,
+        id,
+        skills,
+        skillsDescription || {},
+      );
     }
-    const updatedExperience = await this.experiencesRepository.updateExperience(id, updateExperienceDto);
 
     return ExperienceResponseDto.fromEntity(updatedExperience);
   }
 
   async remove(userId: string, id: string): Promise<void> {
     const experience = await this.experiencesRepository.findByIdAndUserId(id, userId);
-    if (!experience) {
-      throw new NotFoundException(`Experience with ID ${id} not found`);
-    }
+    if (!experience) throw new NotFoundException(`Experience with ID ${id} not found`);
+
     await this.experiencesRepository.deleteExperience(id);
   }
 
@@ -82,6 +92,43 @@ export class ExperiencesService {
       };
 
       await this.topicsService.create(userId, createTopicDto);
+    }
+  }
+
+  private async syncTopicsForSkills(
+    userId: string,
+    experienceId: string,
+    skills: string[],
+    skillsDescription: Record<string, string>,
+  ): Promise<void> {
+    const existingTopics = await this.topicsService.findAllByExperience(userId, experienceId);
+
+    const desiredCategories = new Set(skills);
+    const existingByCategory = new Map(existingTopics.map(t => [t.category, t]));
+
+    for (const skill of skills) {
+      const description = skillsDescription[skill] || `Experience with ${skill}`;
+      const existing = existingByCategory.get(skill);
+      if (!existing) {
+        const createTopicDto: CreateTopicDto = {
+          category: skill,
+          description,
+          experienceId,
+        };
+        await this.topicsService.create(userId, createTopicDto);
+      } else if (existing.description !== description) {
+        const updateTopicDto: UpdateTopicDto = {
+          id: existing.id,
+          description,
+        } as UpdateTopicDto;
+        await this.topicsService.update(userId, existing.id, updateTopicDto);
+      }
+    }
+
+    for (const existing of existingTopics) {
+      if (!desiredCategories.has(existing.category)) {
+        await this.topicsService.remove(userId, existing.id);
+      }
     }
   }
 }

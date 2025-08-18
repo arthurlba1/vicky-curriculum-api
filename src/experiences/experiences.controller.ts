@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth, ApiExtraModels } from '@nestjs/swagger';
 
 import { CurrentUser } from '@/auth/decorators/current-user.decorator';
@@ -68,7 +68,7 @@ export class ExperiencesController {
     return this.experiencesService.findOne(user.id, id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update an experience' })
   @ApiBody({ type: UpdateExperienceDto })
   @ApiResponse({ 
