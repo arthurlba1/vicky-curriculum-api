@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { UsersService } from '@/users/users.service';
+import { FindUserByIdUseCase } from '@/users/use-cases/find-user-by-id.use-case';
 import { UserAuthResponseDto } from '@/auth/dto/auth-response.dto';
 import { UserResponseDto } from '@/users/dto/user-response.dto';
 
@@ -11,7 +11,7 @@ import { UserResponseDto } from '@/users/dto/user-response.dto';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
-    private readonly usersService: UsersService,
+    private readonly findUserByIdUseCase: FindUserByIdUseCase,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,11 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: UserAuthResponseDto): Promise<UserResponseDto> {
-    const user = await this.usersService.findOne(payload.id);
-    if (!user) {
+    try {
+      const user = await this.findUserByIdUseCase.execute(payload.id);
+      return UserResponseDto.fromEntity(user);
+    } catch (error) {
       throw new UnauthorizedException();
     }
-
-    return UserResponseDto.fromEntity(user);
   }
 }

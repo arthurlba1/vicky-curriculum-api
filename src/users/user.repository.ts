@@ -11,15 +11,20 @@ export class UserRepository extends Repository<User> {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.findOne({ where: { email } });
+    return this.findOne({
+      where: { email },
+    });
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.findOne({ where: { id } });
+    return this.findOne({
+      where: { id },
+    });
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = this.create(createUserDto);
-    return this.save(user);
+    const saved = await this.save(user);
+    return this.findById(saved.id);
   }
 }

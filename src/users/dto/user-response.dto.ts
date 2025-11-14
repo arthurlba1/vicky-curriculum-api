@@ -1,6 +1,7 @@
 import { Exclude, Expose, plainToInstance } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@/users/user.entity';
+import { SkillResponseDto } from '@/skills/dto/skill-response.dto';
 
 @Exclude()
 export class UserResponseDto {
@@ -16,11 +17,35 @@ export class UserResponseDto {
   @Expose()
   email: string;
 
-  password: string;
+  @ApiProperty({ description: 'Phone number of the user', required: false })
+  @Expose()
+  phone?: string;
 
+  @ApiProperty({ description: 'Location of the user', required: false })
+  @Expose()
+  location?: string;
+
+  @ApiProperty({ description: 'LinkedIn URL', required: false })
+  @Expose()
+  linkedin?: string;
+
+  @ApiProperty({ description: 'GitHub URL', required: false })
+  @Expose()
+  github?: string;
+
+  @ApiProperty({ description: 'Portfolio URL', required: false })
+  @Expose()
+  portfolio?: string;
+
+  @ApiProperty({ description: 'Creation date of the user' })
+  @Expose()
   createdAt: Date;
 
+  @ApiProperty({ description: 'Last update date of the user' })
+  @Expose()
   updatedAt: Date;
+
+  password: string;
 
   static fromEntity(entity: User): UserResponseDto {
     return plainToInstance(UserResponseDto, entity, {

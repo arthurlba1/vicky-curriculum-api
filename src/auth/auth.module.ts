@@ -3,10 +3,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 
-import { AuthService } from '@/auth/auth.service';
 import { AuthController } from '@/auth/auth.controller';
 import { UsersModule } from '@/users/users.module';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
+import { RegisterUserUseCase } from '@/auth/use-cases/register-user.use-case';
+import { LoginUseCase } from '@/auth/use-cases/login.use-case';
+import { GetLoggedUserUseCase } from '@/auth/use-cases/get-logged-user.use-case';
 
 @Module({
   imports: [
@@ -24,7 +26,6 @@ import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [RegisterUserUseCase, LoginUseCase, GetLoggedUserUseCase, JwtStrategy],
 })
 export class AuthModule {}

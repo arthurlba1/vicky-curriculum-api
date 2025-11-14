@@ -7,7 +7,6 @@ export const swaggerConfig = new DocumentBuilder()
   .addTag('auth', 'Authentication endpoints')
   .addTag('users', 'User management endpoints')
   .addTag('experiences', 'Experience management endpoints')
-  .addTag('topics', 'Topic management endpoints')
   .addBearerAuth(
     {
       type: 'http',
