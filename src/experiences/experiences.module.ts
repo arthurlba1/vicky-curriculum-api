@@ -1,19 +1,37 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { ExperiencesService } from '@/experiences/experiences.service';
-import { ExperiencesController } from '@/experiences/experiences.controller';
-import { Experience } from '@/experiences/experience.entity';
-import { ExperiencesRepository } from '@/experiences/experiences.repository';
-import { TopicsModule } from '@/topics/topics.module';
+import { ProfessionalExperience } from '@/experiences/entities/professional-experience.entity';
+import { ProjectExperience } from '@/experiences/entities/project-experience.entity';
+import { AcademicExperience } from '@/experiences/entities/academic-experience.entity';
+import { AisUnit } from '@/experiences/entities/ais-unit.entity';
+import { ProfessionalExperiencesRepository } from '@/experiences/repositories/professional-experiences.repository';
+import { ProjectExperiencesRepository } from '@/experiences/repositories/project-experiences.repository';
+import { AcademicExperiencesRepository } from '@/experiences/repositories/academic-experiences.repository';
+import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
+import { CheckExperienceOwnershipUseCase } from '@/experiences/use-cases/check-experience-ownership.use-case';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Experience]),
-    forwardRef(() => TopicsModule)
+    TypeOrmModule.forFeature([
+      ProfessionalExperience,
+      ProjectExperience,
+      AcademicExperience,
+      AisUnit,
+    ]),
   ],
-  controllers: [ExperiencesController],
-  providers: [ExperiencesService, ExperiencesRepository],
-  exports: [ExperiencesService],
+  providers: [
+    ProfessionalExperiencesRepository,
+    ProjectExperiencesRepository,
+    AcademicExperiencesRepository,
+    AisUnitsRepository,
+    CheckExperienceOwnershipUseCase,
+  ],
+  exports: [
+    ProfessionalExperiencesRepository,
+    ProjectExperiencesRepository,
+    AcademicExperiencesRepository,
+    AisUnitsRepository,
+    CheckExperienceOwnershipUseCase,
+  ],
 })
 export class ExperiencesModule {}

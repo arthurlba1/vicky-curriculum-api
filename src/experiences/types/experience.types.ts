@@ -5,3 +5,9 @@ export enum ExperienceCategory {
     CERTIFICATION = 'certification',
     PROJECT = 'project',
 }
+
+export enum ExperienceType {
+    WORK = 'work',
+    PROJECT = 'project',
+    EDUCATION = 'education',
+}

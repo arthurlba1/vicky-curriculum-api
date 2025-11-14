@@ -1,0 +1,48 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { User } from '@/users/user.entity';
+
+@Entity('academic_experiences')
+export class AcademicExperience {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  user: User;
+
+  @Column()
+  userId: string;
+
+  @Column()
+  institution: string;
+
+  @Column()
+  course: string;
+
+  @Column({ nullable: true })
+  location?: string;
+
+  @Column({ type: 'date', nullable: true })
+  startDate?: Date;
+
+  @Column({ type: 'date', nullable: true })
+  endDate?: Date;
+
+  @Column({ type: 'text', nullable: true })
+  description?: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
