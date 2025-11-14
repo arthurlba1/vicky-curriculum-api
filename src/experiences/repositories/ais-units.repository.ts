@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, DeepPartial, Repository } from 'typeorm';
 
 import { ExperienceType } from '@/experiences/types/experience.types';
 import { AisUnit } from '@/experiences/entities/ais-unit.entity';
@@ -15,5 +15,27 @@ export class AisUnitsRepository extends Repository<AisUnit> {
       where: { experienceId, experienceType },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  findById(id: string): Promise<AisUnit | null> {
+    return this.findOne({ where: { id } });
+  }
+
+  async createUnit(payload: DeepPartial<AisUnit>): Promise<AisUnit> {
+    const unit = this.create(payload);
+    return this.save(unit);
+  }
+
+  async updateUnit(id: string, payload: DeepPartial<AisUnit>): Promise<AisUnit> {
+    await this.update(id, payload);
+    return this.findOneOrFail({ where: { id } });
+  }
+
+  async deleteById(id: string): Promise<void> {
+    await this.delete(id);
+  }
+
+  async deleteByExperience(experienceId: string, experienceType: ExperienceType): Promise<void> {
+    await this.delete({ experienceId, experienceType });
   }
 }
