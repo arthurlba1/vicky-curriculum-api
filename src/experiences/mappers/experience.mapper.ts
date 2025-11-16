@@ -40,7 +40,7 @@ const extractExperiencePayload = (
   experience: ProfessionalExperience | ProjectExperience | AcademicExperience,
 ) => {
   switch (experienceType) {
-    case ExperienceType.WORK: {
+    case ExperienceType.PROFESSIONAL: {
       const work = experience as ProfessionalExperience;
       return {
         companyName: work.companyName,
@@ -63,7 +63,7 @@ const extractExperiencePayload = (
         description: project.description,
       };
     }
-    case ExperienceType.EDUCATION: {
+    case ExperienceType.ACADEMIC: {
       const academic = experience as AcademicExperience;
       return {
         institution: academic.institution,
@@ -88,39 +88,39 @@ export const mapExperienceInputToEntityPayload = (
 ) => {
   const parseDate = (value?: string) => (value ? new Date(value) : undefined);
 
+  // Access fields directly from the object since it may come as a plain object
+  const input = experienceInput as any;
+
   switch (experienceType) {
-    case ExperienceType.WORK: {
-      const work = experienceInput as CreateWorkExperienceInput;
+    case ExperienceType.PROFESSIONAL: {
       return {
-        companyName: work.companyName,
-        role: work.role,
-        location: work.location,
-        startDate: parseDate(work.startDate),
-        endDate: parseDate(work.endDate),
-        generalDescription: work.generalDescription,
+        companyName: input.companyName,
+        role: input.role,
+        location: input.location,
+        startDate: parseDate(input.startDate),
+        endDate: parseDate(input.endDate),
+        generalDescription: input.generalDescription,
       };
     }
     case ExperienceType.PROJECT: {
-      const project = experienceInput as CreateProjectExperienceInput;
       return {
-        projectName: project.projectName,
-        companyName: project.companyName,
-        repoUrl: project.repoUrl,
-        projectUrl: project.projectUrl,
-        startDate: parseDate(project.startDate),
-        endDate: parseDate(project.endDate),
-        description: project.description,
+        projectName: input.projectName,
+        companyName: input.companyName,
+        repoUrl: input.repoUrl,
+        projectUrl: input.projectUrl,
+        startDate: parseDate(input.startDate),
+        endDate: parseDate(input.endDate),
+        description: input.description,
       };
     }
-    case ExperienceType.EDUCATION: {
-      const academic = experienceInput as CreateAcademicExperienceInput;
+    case ExperienceType.ACADEMIC: {
       return {
-        institution: academic.institution,
-        course: academic.course,
-        location: academic.location,
-        startDate: parseDate(academic.startDate),
-        endDate: parseDate(academic.endDate),
-        description: academic.description,
+        institution: input.institution,
+        course: input.course,
+        location: input.location || null,
+        startDate: parseDate(input.startDate),
+        endDate: parseDate(input.endDate),
+        description: input.description || null,
       };
     }
     default:

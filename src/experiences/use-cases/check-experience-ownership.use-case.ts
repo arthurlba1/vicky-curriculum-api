@@ -30,11 +30,11 @@ export class CheckExperienceOwnershipUseCase
 
   private getRepositoryByType(experienceType: ExperienceType) {
     switch (experienceType) {
-      case ExperienceType.WORK:
+      case ExperienceType.PROFESSIONAL:
         return this.professionalExperiencesRepository;
       case ExperienceType.PROJECT:
         return this.projectExperiencesRepository;
-      case ExperienceType.EDUCATION:
+      case ExperienceType.ACADEMIC:
         return this.academicExperiencesRepository;
       default:
         throw new NotFoundException(`Unknown experience type: ${experienceType}`);

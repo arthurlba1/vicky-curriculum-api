@@ -6,9 +6,9 @@ import { ProjectExperiencesRepository } from '@/experiences/repositories/project
 import { AcademicExperiencesRepository } from '@/experiences/repositories/academic-experiences.repository';
 
 type ExperienceRepositoryMap = {
-  [ExperienceType.WORK]: ProfessionalExperiencesRepository;
+  [ExperienceType.PROFESSIONAL]: ProfessionalExperiencesRepository;
   [ExperienceType.PROJECT]: ProjectExperiencesRepository;
-  [ExperienceType.EDUCATION]: AcademicExperiencesRepository;
+  [ExperienceType.ACADEMIC]: AcademicExperiencesRepository;
 };
 
 @Injectable()
@@ -21,9 +21,9 @@ export class ExperienceRepositoryFactory {
     private readonly academicExperiencesRepository: AcademicExperiencesRepository,
   ) {
     this.repositoryMap = {
-      [ExperienceType.WORK]: this.professionalExperiencesRepository,
+      [ExperienceType.PROFESSIONAL]: this.professionalExperiencesRepository,
       [ExperienceType.PROJECT]: this.projectExperiencesRepository,
-      [ExperienceType.EDUCATION]: this.academicExperiencesRepository,
+      [ExperienceType.ACADEMIC]: this.academicExperiencesRepository,
     };
   }
 

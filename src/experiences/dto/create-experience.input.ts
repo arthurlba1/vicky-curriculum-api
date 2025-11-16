@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsArray, IsEnum, ValidateNested } from 'class-validator';
+import { Type, Expose } from 'class-transformer';
+import { IsArray, IsEnum, ValidateNested, IsObject } from 'class-validator';
 
 import { ExperienceType } from '@/experiences/types/experience.types';
 import { CreateWorkExperienceInput } from '@/experiences/dto/create-work-experience.input';
@@ -19,9 +19,10 @@ export class CreateExperienceInput {
       { $ref: '#/components/schemas/CreateProjectExperienceInput' },
       { $ref: '#/components/schemas/CreateAcademicExperienceInput' },
     ],
+    description: 'Experience data based on experienceType',
   })
-  @ValidateNested()
-  @Type(() => Object)
+  @Expose()
+  @IsObject({ message: 'Experience must be an object' })
   experience:
     | CreateWorkExperienceInput
     | CreateProjectExperienceInput

@@ -9,4 +9,7 @@ export class ExperienceWithAisUnitsResponseDto {
 
   @ApiProperty({ type: () => [AisUnitResponse] })
   aisUnits: AisUnitResponse[];
+
+  @ApiProperty({ type: [String], description: 'Unique skills aggregated from AIS units' })
+  skills: string[];
 }

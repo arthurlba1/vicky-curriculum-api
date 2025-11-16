@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 
 import { UseCase } from '@/core/application/use-case.interface';
 import { ExperienceRepositoryFactory } from '@/experiences/experience-repository.factory';
@@ -11,6 +11,9 @@ import {
 } from '@/experiences/mappers/experience.mapper';
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
+import { ProfessionalExperience } from '@/experiences/entities/professional-experience.entity';
+import { AcademicExperience } from '@/experiences/entities/academic-experience.entity';
+import { ProjectExperience } from '@/experiences/entities/project-experience.entity';
 
 export interface CreateExperienceUseCaseInput extends CreateExperienceInput {
   userId: string;
@@ -33,6 +36,10 @@ export class CreateExperienceUseCase
   async execute(
     input: CreateExperienceUseCaseInput,
   ): Promise<CreateExperienceUseCaseOutput> {
+    if (!input.experience) {
+      throw new BadRequestException('Experience data is required');
+    }
+
     const repository = this.experienceRepositoryFactory.getRepository(
       input.experienceType,
     );
@@ -42,7 +49,7 @@ export class CreateExperienceUseCase
       input.experience,
     );
 
-    const experience = await repository.createExperience(payload as any, input.userId);
+    const experience = await repository.createExperience(payload as ProfessionalExperience | ProjectExperience | AcademicExperience, input.userId);
 
     const aisUnits = await Promise.all(
       (input.aisUnits ?? []).map((aisUnit) =>

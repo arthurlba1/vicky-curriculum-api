@@ -22,7 +22,7 @@ export class ProfessionalExperience {
   @Column()
   userId: string;
 
-  @Column({ name: 'company_name' })
+  @Column()
   companyName: string;
 
   @Column()

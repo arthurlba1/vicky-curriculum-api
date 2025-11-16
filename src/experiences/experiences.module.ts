@@ -11,6 +11,7 @@ import { AisUnitsRepository } from '@/experiences/repositories/ais-units.reposit
 import { CheckExperienceOwnershipUseCase } from '@/experiences/use-cases/check-experience-ownership.use-case';
 import { ExperienceRepositoryFactory } from '@/experiences/experience-repository.factory';
 import { ListExperiencesUseCase } from '@/experiences/use-cases/list-experiences.use-case';
+import { ListAllExperiencesUseCase } from '@/experiences/use-cases/list-all-experiences.use-case';
 import { CreateExperienceUseCase } from '@/experiences/use-cases/create-experience.use-case';
 import { UpdateExperienceUseCase } from '@/experiences/use-cases/update-experience.use-case';
 import { RemoveExperienceUseCase } from '@/experiences/use-cases/remove-experience.use-case';
@@ -38,6 +39,7 @@ import { ExperiencesController } from '@/experiences/experiences.controller';
     ExperienceRepositoryFactory,
     CheckExperienceOwnershipUseCase,
     ListExperiencesUseCase,
+    ListAllExperiencesUseCase,
     CreateExperienceUseCase,
     UpdateExperienceUseCase,
     RemoveExperienceUseCase,
@@ -54,6 +56,7 @@ import { ExperiencesController } from '@/experiences/experiences.controller';
     ExperienceRepositoryFactory,
     CheckExperienceOwnershipUseCase,
     ListExperiencesUseCase,
+    ListAllExperiencesUseCase,
     CreateExperienceUseCase,
     UpdateExperienceUseCase,
     RemoveExperienceUseCase,
