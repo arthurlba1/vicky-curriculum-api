@@ -7,8 +7,9 @@ import { UsersModule } from '@/users/users.module';
 import { AuthModule } from '@/auth/auth.module';
 import { JwtAuthGlobalGuard } from '@/auth/guards/jwt-auth.global.guard';
 import { ExperiencesModule } from '@/experiences/experiences.module';
-import { ResumeModule } from './resume/resume.module';
-import { AiModule } from './ai/ai.module';
+import { ResumeModule } from '@/resume/resume.module';
+import { AiModule } from '@/ai/ai.module';
+import { JobPostingsModule } from '@/job-postings/job-postings.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AiModule } from './ai/ai.module';
     ExperiencesModule,
     ResumeModule,
     AiModule,
+    JobPostingsModule,
   ],
   providers: [
     {
