@@ -48,4 +48,11 @@ export class JobPostingsRepository extends Repository<JobPosting> {
   async deleteById(id: string, userId: string): Promise<void> {
     await this.delete({ id, userId });
   }
+
+  async findByIdWithEmbedding(id: string, userId: string): Promise<JobPosting | null> {
+    return this.findOne({
+      where: { id, userId },
+      select: ['id', 'userId', 'rawText', 'status', 'embedding', 'embeddingModel', 'summaryJson'],
+    });
+  }
 }
