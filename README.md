@@ -49,43 +49,111 @@ To run Vicky API locally, follow these steps:
    npm install
    ```
 
-3. **Set up the database**:
+3. **Configure environment variables**:
+   - Copy the example environment file:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edit `.env` and configure the following variables:
+     - **Database (PostgreSQL)**: `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`
+     - **Redis**: `REDIS_HOST`, `REDIS_PORT`
+     - **OpenAI API**: `OPENAI_API_KEY` (required for embeddings and LLM features)
+     - **Application**: `PORT` (optional, defaults to 3000), `NODE_ENV`
+
+4. **Set up the database and Redis**:
    - Ensure you have Docker and Docker Compose installed.
-   - Run the following command to start the PostgreSQL database:
+   - Run the following command to start PostgreSQL (with pgvector) and Redis:
      ```bash
      docker-compose up -d
      ```
+   - Initialize pgvector extension in the database:
+     ```bash
+     docker exec -i vicky-postgres-database psql -U vicky -d vicky_db < database/init-extensions.sql
+     ```
 
-4. **Run the application**:
+5. **Run the application**:
    ```bash
    npm run start:dev
    ```
 
 The API will be available at `http://localhost:3000`.
 
+## Environment Variables
+
+The application uses the following environment variables (see `.env.example` for reference):
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `PORT` | Application port | `3000` | No |
+| `NODE_ENV` | Environment mode | `development` | No |
+| `DB_HOST` | PostgreSQL host | `localhost` | No |
+| `DB_PORT` | PostgreSQL port | `5432` | No |
+| `DB_USERNAME` | PostgreSQL username | `vicky` | No |
+| `DB_PASSWORD` | PostgreSQL password | `vicky123` | No |
+| `DB_DATABASE` | PostgreSQL database name | `vicky_db` | No |
+| `REDIS_HOST` | Redis host | `localhost` | No |
+| `REDIS_PORT` | Redis port | `6379` | No |
+| `OPENAI_API_KEY` | OpenAI API key for embeddings and LLM | - | **Yes** |
+| `JWT_SECRET` | JWT secret for token signing | `your-secret-key` | No (change in production!) |
+| `JWT_EXPIRES_IN` | JWT token expiration time | `1d` | No |
+
+### Production Deployment
+
+For production deployments, set these environment variables in your hosting platform:
+
+- **Docker/Container platforms**: Use environment variables or `.env` file mounted as secret
+- **Cloud platforms** (AWS, GCP, Azure): Use their respective secret management services
+- **Platform-as-a-Service** (Heroku, Railway, etc.): Set via their dashboard or CLI
+
+Example for Docker Compose in production:
+```yaml
+services:
+  app:
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+    env_file:
+      - .env.production
+```
+
+Example for Kubernetes ConfigMap/Secret:
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vicky-api-config
+data:
+  DB_HOST: "your-db-host"
+  DB_PORT: "5432"
+  DB_DATABASE: "vicky_db"
+  REDIS_HOST: "your-redis-host"
+  REDIS_PORT: "6379"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vicky-api-secrets
+type: Opaque
+stringData:
+  DB_USERNAME: "your-db-username"
+  DB_PASSWORD: "your-db-password"
+  OPENAI_API_KEY: "your-openai-api-key"
+  JWT_SECRET: "your-jwt-secret"
+```
+
 ## API Documentation
 
 Vicky API includes comprehensive documentation generated with Swagger. To access the documentation, run the application and navigate to `http://localhost:3000/api`.
 
-The documentation provides a detailed overview of all available endpoints, including:
-
-- **Authentication**:
-  - `POST /auth/register`: Register a new user.
-  - `POST /auth/login`: Log in and receive a JWT.
-
-- **Experiences**:
-  - `GET /experiences`: Get all experiences for the authenticated user.
-  - `POST /experiences`: Create a new experience.
-  - `GET /experiences/:id`: Get a specific experience by ID.
-  - `PATCH /experiences/:id`: Update an experience.
-  - `DELETE /experiences/:id`: Delete an experience.
-
-- **Topics**:
-  - `GET /topics/experience/:experienceId`: Get all topics for a specific experience.
-  - `POST /topics`: Create a new topic for an experience.
-  - `GET /topics/:id`: Get a specific topic by ID.
-  - `PATCH /topics/:id`: Update a topic.
-  - `DELETE /topics/:id`: Delete a topic.
+The documentation provides a detailed overview of all available endpoints
 
 The Swagger UI allows you to interact with the API directly from your browser, making it easy to test and explore the available functionality.
 

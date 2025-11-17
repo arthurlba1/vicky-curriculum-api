@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:latest
+    image: pgvector/pgvector:pg16
     container_name: vicky-postgres-database
     ports:
       - "5432:5432"
@@ -10,6 +10,16 @@ services:
       POSTGRES_DB: vicky_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    command: postgres -c shared_preload_libraries=vector
+
+  redis:
+    image: redis:7-alpine
+    container_name: vicky-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 
 volumes:
   postgres_data:
+  redis_data:
