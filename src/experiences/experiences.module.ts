@@ -20,6 +20,7 @@ import { CreateAisUnitUseCase } from '@/experiences/use-cases/create-ais-unit.us
 import { UpdateAisUnitUseCase } from '@/experiences/use-cases/update-ais-unit.use-case';
 import { RemoveAisUnitUseCase } from '@/experiences/use-cases/remove-ais-unit.use-case';
 import { ExperiencesController } from '@/experiences/experiences.controller';
+import { EmbeddingsModule } from '@/embeddings/embeddings.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ExperiencesController } from '@/experiences/experiences.controller';
       AcademicExperience,
       AisUnit,
     ]),
+    EmbeddingsModule,
   ],
   controllers: [ExperiencesController],
   providers: [

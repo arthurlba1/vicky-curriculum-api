@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { User } from '@/users/user.entity';
+import { VectorTransformer } from '@/database/pgvector.type';
 
 @Entity('professional_experiences')
 export class ProfessionalExperience {
@@ -39,6 +40,16 @@ export class ProfessionalExperience {
 
   @Column({ type: 'text', nullable: true })
   generalDescription?: string;
+
+  @Column({
+    type: 'text' as any,
+    transformer: new VectorTransformer(),
+    nullable: true,
+  })
+  embedding?: number[];
+
+  @Column({ nullable: true })
+  embeddingModel?: string;
 
   @CreateDateColumn()
   createdAt: Date;

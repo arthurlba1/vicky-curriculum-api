@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiExtraModels,
@@ -14,12 +14,14 @@ import { UserResponseDto } from '@/users/dto/user-response.dto';
 import { ListExperiencesUseCase } from '@/experiences/use-cases/list-experiences.use-case';
 import { ListAllExperiencesUseCase } from '@/experiences/use-cases/list-all-experiences.use-case';
 import { CreateExperienceUseCase } from '@/experiences/use-cases/create-experience.use-case';
+import { UpdateExperienceUseCase } from '@/experiences/use-cases/update-experience.use-case';
 import { ListExperiencesParamsDto } from '@/experiences/dto/list-experiences.params';
 import { CreateExperienceInput } from '@/experiences/dto/create-experience.input';
 import { ExperienceSummary } from '@/experiences/dto/experience-summary.dto';
 import { ExperienceWithAisUnitsResponseDto } from '@/experiences/dto/experience-with-ais-units.response';
 import { AllExperiencesResponseDto } from '@/experiences/dto/all-experiences.response';
 import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
+import { UpdateExperienceInput } from '@/experiences/dto/update-experience.input';
 import { CreateWorkExperienceInput } from '@/experiences/dto/create-work-experience.input';
 import { CreateProjectExperienceInput } from '@/experiences/dto/create-project-experience.input';
 import { CreateAcademicExperienceInput } from '@/experiences/dto/create-academic-experience.input';
@@ -45,6 +47,7 @@ export class ExperiencesController {
     private readonly listExperiencesUseCase: ListExperiencesUseCase,
     private readonly listAllExperiencesUseCase: ListAllExperiencesUseCase,
     private readonly createExperienceUseCase: CreateExperienceUseCase,
+    private readonly updateExperienceUseCase: UpdateExperienceUseCase,
   ) {}
 
   @Get()
@@ -117,6 +120,37 @@ export class ExperiencesController {
       data,
       message: 'Experience created successfully',
       statusCode: STATUS_CODES.SUCCESSFUL.CREATED,
+    };
+  }
+
+  @Put(':experienceId')
+  @ApiOperation({ summary: 'Update an existing experience (replaces AIS units)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Experience updated successfully',
+    type: ApiResponseDto,
+  })
+  async updateExperience(
+    @CurrentUser() user: UserResponseDto,
+    @Param('experienceId') experienceId: string,
+    @Body() body: UpdateExperienceInput,
+  ): Promise<ApiResponseDto<ExperienceWithAisUnitsResponseDto>> {
+    const result = await this.updateExperienceUseCase.execute({
+      ...body,
+      experienceId,
+      userId: user.id,
+    });
+
+    const data: ExperienceWithAisUnitsResponseDto = {
+      experience: result.experience,
+      aisUnits: result.aisUnits as AisUnitResponse[],
+      skills: [],
+    };
+
+    return {
+      data,
+      message: 'Experience updated successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
     };
   }
 }

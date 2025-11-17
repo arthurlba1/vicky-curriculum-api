@@ -7,6 +7,7 @@ import { UpdateAisUnitInput } from '@/experiences/dto/update-ais-unit.input';
 import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { mapAisUnitToResponse } from '@/experiences/mappers/experience.mapper';
+import { EmbeddingQueue } from '@/embeddings/queues/embedding.queue';
 
 export interface UpdateAisUnitUseCaseInput {
   userId: string;
@@ -22,6 +23,7 @@ export class UpdateAisUnitUseCase
   constructor(
     private readonly experienceRepositoryFactory: ExperienceRepositoryFactory,
     private readonly aisUnitsRepository: AisUnitsRepository,
+    private readonly embeddingQueue: EmbeddingQueue,
   ) {}
 
   async execute(input: UpdateAisUnitUseCaseInput): Promise<AisUnitResponse> {
@@ -55,6 +57,14 @@ export class UpdateAisUnitUseCase
       impact: input.aisUnit.impact,
       context: input.aisUnit.context,
       skills: input.aisUnit.skills,
+    });
+
+    await this.embeddingQueue.enqueueAisUnitEmbedding({
+      aisUnitId: updatedAisUnit.id,
+      action: updatedAisUnit.action,
+      impact: updatedAisUnit.impact,
+      context: updatedAisUnit.context,
+      skills: updatedAisUnit.skills,
     });
 
     return mapAisUnitToResponse(updatedAisUnit);

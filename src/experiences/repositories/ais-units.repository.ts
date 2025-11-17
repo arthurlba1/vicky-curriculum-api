@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, DeepPartial, Repository } from 'typeorm';
+import { DataSource, DeepPartial, Repository, UpdateResult } from 'typeorm';
 
 import { ExperienceType } from '@/experiences/types/experience.types';
 import { AisUnit } from '@/experiences/entities/ais-unit.entity';
@@ -27,8 +27,12 @@ export class AisUnitsRepository extends Repository<AisUnit> {
   }
 
   async updateUnit(id: string, payload: DeepPartial<AisUnit>): Promise<AisUnit> {
-    await this.update(id, payload);
+    await super.update(id, payload);
     return this.findOneOrFail({ where: { id } });
+  }
+
+  async update(id: string, payload: DeepPartial<AisUnit>): Promise<UpdateResult> {
+    return super.update(id, payload);
   }
 
   async deleteById(id: string): Promise<void> {

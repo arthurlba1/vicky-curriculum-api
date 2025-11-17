@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 
 import { ExperienceType } from '@/experiences/types/experience.types';
+import { VectorTransformer } from '@/database/pgvector.type';
 
 @Entity('ais_units')
 export class AisUnit {
@@ -33,6 +34,16 @@ export class AisUnit {
 
   @Column('text', { array: true, default: () => 'ARRAY[]::text[]' })
   skills: string[];
+
+  @Column({
+    type: 'text' as any,
+    transformer: new VectorTransformer(),
+    nullable: true,
+  })
+  embedding?: number[];
+
+  @Column({ nullable: true })
+  embeddingModel?: string;
 
   @CreateDateColumn()
   createdAt: Date;
