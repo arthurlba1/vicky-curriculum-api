@@ -12,7 +12,8 @@ import {
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
 import { ExperienceType } from '@/experiences/types/experience.types';
-import { EmbeddingQueue } from '@/embeddings/queues/embedding.queue';
+// import { EmbeddingQueue } from '@/embeddings/queues/embedding.queue';
+import { EmbeddingsService } from '@/embeddings/embeddings.service';
 import { ProfessionalExperience } from '@/experiences/entities/professional-experience.entity';
 import { ProjectExperience } from '@/experiences/entities/project-experience.entity';
 import { AcademicExperience } from '@/experiences/entities/academic-experience.entity';
@@ -33,7 +34,8 @@ export class UpdateExperienceUseCase
   constructor(
     private readonly experienceRepositoryFactory: ExperienceRepositoryFactory,
     private readonly aisUnitsRepository: AisUnitsRepository,
-    private readonly embeddingQueue: EmbeddingQueue,
+    // private readonly embeddingQueue: EmbeddingQueue,
+    private readonly embeddingsService: EmbeddingsService,
   ) {}
 
   async execute(
@@ -80,35 +82,69 @@ export class UpdateExperienceUseCase
 
     const description = this.extractDescription(input.experienceType, updatedExperience);
     if (description && description.trim().length > 0) {
-      await this.embeddingQueue.enqueueExperienceEmbedding({
-        experienceId: updatedExperience.id,
-        experienceType: input.experienceType,
-        description,
-      });
+      try {
+        const { embedding, model } = await this.embeddingsService.generateEmbedding(description);
+        const repository = this.experienceRepositoryFactory.getRepository(input.experienceType);
+        await repository.update(updatedExperience.id, {
+          embedding,
+          embeddingModel: model,
+        } as any);
+      } catch (error) {
+        console.error(`Failed to generate embedding for experience ${updatedExperience.id}:`, error);
+      }
     }
 
     if (aisUnits.length > 0) {
-      if (aisUnits.length === 1) {
-        // Single AIS Unit - use single job
-        const unit = aisUnits[0];
-        await this.embeddingQueue.enqueueAisUnitEmbedding({
-          aisUnitId: unit.id,
-          action: unit.action,
-          impact: unit.impact,
-          context: unit.context,
-          skills: unit.skills,
-        });
-      } else {
-        // Multiple AIS Units - use batch job
-        await this.embeddingQueue.enqueueAisUnitBatchEmbedding({
-          units: aisUnits.map((unit) => ({
-            aisUnitId: unit.id,
+      try {
+        if (aisUnits.length === 1) {
+          const unit = aisUnits[0];
+          const unifiedText = this.embeddingsService.unifyAisUnitToText({
             action: unit.action,
             impact: unit.impact,
             context: unit.context,
             skills: unit.skills,
-          })),
-        });
+          });
+
+          if (unifiedText && unifiedText.trim().length > 0) {
+            const { embedding, model } = await this.embeddingsService.generateEmbedding(unifiedText);
+            await this.aisUnitsRepository.update(unit.id, {
+              embedding,
+              embeddingModel: model,
+            });
+          }
+        } else {
+          const texts = aisUnits.map((unit) =>
+            this.embeddingsService.unifyAisUnitToText({
+              action: unit.action,
+              impact: unit.impact,
+              context: unit.context,
+              skills: unit.skills,
+            }),
+          );
+
+          const validTexts: string[] = [];
+          const validUnits: typeof aisUnits = [];
+          for (let i = 0; i < texts.length; i++) {
+            if (texts[i] && texts[i].trim().length > 0) {
+              validTexts.push(texts[i]);
+              validUnits.push(aisUnits[i]);
+            }
+          }
+
+          if (validTexts.length > 0) {
+            const { embeddings, model } = await this.embeddingsService.generateEmbeddingsBatch(validTexts);
+            await Promise.all(
+              validUnits.map((unit, index) =>
+                this.aisUnitsRepository.update(unit.id, {
+                  embedding: embeddings[index],
+                  embeddingModel: model,
+                }),
+              ),
+            );
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to generate embeddings for AIS units:`, error);
       }
     }
 

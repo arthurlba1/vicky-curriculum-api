@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 
 import { JobPosting } from './entities/job-posting.entity';
 import { JobPostingsRepository } from './repositories/job-postings.repository';
@@ -12,6 +13,7 @@ import { ExperiencesModule } from '@/experiences/experiences.module';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([JobPosting]),
     EmbeddingsModule,
     ExperiencesModule,

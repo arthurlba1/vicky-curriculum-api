@@ -7,7 +7,8 @@ import { CreateAisUnitInput } from '@/experiences/dto/create-ais-unit.input';
 import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { mapAisUnitToResponse } from '@/experiences/mappers/experience.mapper';
-import { EmbeddingQueue } from '@/embeddings/queues/embedding.queue';
+// import { EmbeddingQueue } from '@/embeddings/queues/embedding.queue';
+import { EmbeddingsService } from '@/embeddings/embeddings.service';
 
 export interface CreateAisUnitUseCaseInput {
   userId: string;
@@ -23,7 +24,8 @@ export class CreateAisUnitUseCase
   constructor(
     private readonly experienceRepositoryFactory: ExperienceRepositoryFactory,
     private readonly aisUnitsRepository: AisUnitsRepository,
-    private readonly embeddingQueue: EmbeddingQueue,
+    // private readonly embeddingQueue: EmbeddingQueue,
+    private readonly embeddingsService: EmbeddingsService,
   ) {}
 
   async execute(input: CreateAisUnitUseCaseInput): Promise<AisUnitResponse> {
@@ -46,13 +48,24 @@ export class CreateAisUnitUseCase
       experienceType: input.experienceType,
     });
 
-    await this.embeddingQueue.enqueueAisUnitEmbedding({
-      aisUnitId: aisUnit.id,
-      action: aisUnit.action,
-      impact: aisUnit.impact,
-      context: aisUnit.context,
-      skills: aisUnit.skills,
-    });
+    try {
+      const unifiedText = this.embeddingsService.unifyAisUnitToText({
+        action: aisUnit.action,
+        impact: aisUnit.impact,
+        context: aisUnit.context,
+        skills: aisUnit.skills,
+      });
+
+      if (unifiedText && unifiedText.trim().length > 0) {
+        const { embedding, model } = await this.embeddingsService.generateEmbedding(unifiedText);
+        await this.aisUnitsRepository.update(aisUnit.id, {
+          embedding,
+          embeddingModel: model,
+        });
+      }
+    } catch (error) {
+      console.error(`Failed to generate embedding for AIS unit ${aisUnit.id}:`, error);
+    }
 
     return mapAisUnitToResponse(aisUnit);
   }
