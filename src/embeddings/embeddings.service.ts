@@ -5,12 +5,19 @@ import OpenAI from 'openai';
 /**
  * Service responsible for generating embeddings using OpenAI
  */
+
+/**
+ * Embedding dimensions for the OpenAI models, Use the same dimensions for both models to ensure compatibility in cosine similarity
+ */
+const EMBEDDING_DIMENSIONS = 1536;
+
 @Injectable()
 export class EmbeddingsService {
   private readonly logger = new Logger(EmbeddingsService.name);
   private readonly openai: OpenAI;
   private readonly defaultModel = 'text-embedding-3-small';
-  private readonly defaultDimensions = 1536;
+  private readonly largeModel = 'text-embedding-3-large';
+  private readonly embeddingDimensions = EMBEDDING_DIMENSIONS;
 
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.get<string>('OPENAI_API_KEY');
@@ -40,7 +47,7 @@ export class EmbeddingsService {
       const response = await this.openai.embeddings.create({
         model: embeddingModel,
         input: text,
-        dimensions: this.defaultDimensions,
+        dimensions: this.embeddingDimensions,
       });
 
       const embedding = response.data[0]?.embedding;
@@ -84,7 +91,7 @@ export class EmbeddingsService {
       const response = await this.openai.embeddings.create({
         model: embeddingModel,
         input: validTexts,
-        dimensions: this.defaultDimensions,
+        dimensions: this.embeddingDimensions,
       });
 
       const embeddings = response.data.map((item) => item.embedding);
@@ -101,37 +108,4 @@ export class EmbeddingsService {
       throw error;
     }
   }
-
-  /**
-   * Unify AIS Unit JSON into a single text for embedding generation
-   * @param aisUnit AIS Unit object
-   * @returns Unified text representation
-   */
-  unifyAisUnitToText(aisUnit: {
-    action: string;
-    impact: string;
-    context: string;
-    skills?: string[];
-  }): string {
-    const parts: string[] = [];
-
-    if (aisUnit.action) {
-      parts.push(`Action: ${aisUnit.action}`);
-    }
-
-    if (aisUnit.context) {
-      parts.push(`Context: ${aisUnit.context}`);
-    }
-
-    if (aisUnit.impact) {
-      parts.push(`Impact: ${aisUnit.impact}`);
-    }
-
-    if (aisUnit.skills && aisUnit.skills.length > 0) {
-      parts.push(`Skills: ${aisUnit.skills.join(', ')}`);
-    }
-
-    return parts.join('. ');
-  }
 }
-
