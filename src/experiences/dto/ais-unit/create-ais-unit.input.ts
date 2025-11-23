@@ -1,24 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateAisUnitInput {
+import { BaseAisUnit } from '@/experiences/dto/ais-unit/base-ais-unit';
+
+export class CreateAisUnitInput extends BaseAisUnit {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  action: string;
+  override action: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  impact: string;
+  override impact: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  context: string;
+  override context: string;
 
   @ApiProperty({ type: [String] })
   @IsArray()
   @IsString({ each: true })
-  skills: string[];
+  override skills: string[];
 }

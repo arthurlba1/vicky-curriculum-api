@@ -5,7 +5,6 @@ import { ExperienceType } from '@/experiences/types/experience.types';
 import { ExperienceRepositoryFactory } from '@/experiences/experience-repository.factory';
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { ExperienceSummary } from '@/experiences/dto/experience-summary.dto';
-import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
 import { ExperienceWithAisUnitsResponseDto } from '@/experiences/dto/experience-with-ais-units.response';
 import { AllExperiencesResponseDto } from '@/experiences/dto/all-experiences.response';
 import { mapExperienceToSummary, mapAisUnitToResponse } from '@/experiences/mappers/experience.mapper';

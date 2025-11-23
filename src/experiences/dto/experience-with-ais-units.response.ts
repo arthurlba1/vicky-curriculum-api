@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { ExperienceSummary } from '@/experiences/dto/experience-summary.dto';
-import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
+import { AisUnitResponse } from '@/experiences/dto/ais-unit/ais-unit.response';
 
 export class ExperienceWithAisUnitsResponseDto {
   @ApiProperty()

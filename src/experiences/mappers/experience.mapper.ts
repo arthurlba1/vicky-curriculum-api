@@ -7,7 +7,7 @@ import { CreateProjectExperienceInput } from '@/experiences/dto/create-project-e
 import { CreateWorkExperienceInput } from '@/experiences/dto/create-work-experience.input';
 import { ExperienceSummary } from '@/experiences/dto/experience-summary.dto';
 import { AisUnit } from '@/experiences/entities/ais-unit.entity';
-import { AisUnitResponse } from '@/experiences/dto/ais-unit.response';
+import { AisUnitResponse } from '@/experiences/dto/ais-unit/ais-unit.response';
 
 export const mapExperienceToSummary = (
   experienceType: ExperienceType,
@@ -23,10 +23,15 @@ export const mapExperienceToSummary = (
   });
 };
 
-export const mapAisUnitToResponse = (aisUnit: AisUnit): AisUnitResponse =>
-  Object.assign(new AisUnitResponse(), {
+/**
+ * Maps an AIS Unit entity to a response DTO
+ * Includes all base fields plus metadata
+ */
+export const mapAisUnitToResponse = (aisUnit: AisUnit): AisUnitResponse => {
+  const response = Object.assign(new AisUnitResponse(), {
     id: aisUnit.id,
     experienceId: aisUnit.experienceId,
+    experienceType: aisUnit.experienceType,
     action: aisUnit.action,
     impact: aisUnit.impact,
     context: aisUnit.context,
@@ -34,6 +39,8 @@ export const mapAisUnitToResponse = (aisUnit: AisUnit): AisUnitResponse =>
     createdAt: aisUnit.createdAt,
     updatedAt: aisUnit.updatedAt,
   });
+  return response;
+};
 
 const extractExperiencePayload = (
   experienceType: ExperienceType,

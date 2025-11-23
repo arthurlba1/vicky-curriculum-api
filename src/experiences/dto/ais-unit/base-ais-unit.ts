@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AisUnitResponse {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  experienceId: string;
-
+export class BaseAisUnit {
   @ApiProperty()
   action: string;
 
@@ -18,10 +12,4 @@ export class AisUnitResponse {
 
   @ApiProperty({ type: [String] })
   skills: string[];
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
 }

@@ -6,7 +6,7 @@ import { ExperienceType } from '@/experiences/types/experience.types';
 import { CreateWorkExperienceInput } from '@/experiences/dto/create-work-experience.input';
 import { CreateProjectExperienceInput } from '@/experiences/dto/create-project-experience.input';
 import { CreateAcademicExperienceInput } from '@/experiences/dto/create-academic-experience.input';
-import { CreateAisUnitInput } from '@/experiences/dto/create-ais-unit.input';
+import { CreateAisUnitInput } from '@/experiences/dto/ais-unit/create-ais-unit.input';
 
 export class CreateExperienceInput {
   @ApiProperty({ enum: ExperienceType })
