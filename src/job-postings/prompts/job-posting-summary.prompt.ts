@@ -9,7 +9,7 @@ Extract the following information:
 - requiredSkills: Array of required technical skills
 - preferredSkills: Array of preferred/nice-to-have skills
 - requiredExperience: Minimum years of experience required
-- description: Brief summary of the role (2-3 sentences)
+- description: Enhanced job description. This is critical: semantically enrich the job description by adding frequently used technical terms, implicit keywords, expected skills, seniority level, and synonyms. Do not invent unrealistic requirements. Use direct language. Make it comprehensive and semantically rich for better embedding matching.
 
 Return ONLY valid JSON, no additional text or markdown formatting.
 If a field cannot be determined from the text, use null for that field.
@@ -23,5 +23,5 @@ Example output format:
   "requiredSkills": ["TypeScript", "React", "Node.js", "PostgreSQL"],
   "preferredSkills": ["AWS", "Docker", "GraphQL"],
   "requiredExperience": 5,
-  "description": "We are looking for an experienced full stack developer to join our team..."
+  "description": "Senior-level full stack development position requiring expertise in modern web technologies including TypeScript, React framework, Node.js runtime, and PostgreSQL database management. The role involves building scalable applications, working with cloud infrastructure, containerization technologies, and implementing robust backend and frontend solutions..."
 }`;

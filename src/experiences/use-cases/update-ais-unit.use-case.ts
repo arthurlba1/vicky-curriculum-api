@@ -7,8 +7,9 @@ import { UpdateAisUnitInput } from '@/experiences/dto/ais-unit/update-ais-unit.i
 import { AisUnitResponse } from '@/experiences/dto/ais-unit/ais-unit.response';
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { mapAisUnitToResponse } from '@/experiences/mappers/experience.mapper';
-import { EmbeddingsService } from '@/embeddings/embeddings.service';
-import { unifyAisUnitToText } from '@/experiences/utils/unify-ais-unit';
+// Embedding generation disabled
+// import { EmbeddingsService } from '@/embeddings/embeddings.service';
+// import { unifyAisUnitToText } from '@/experiences/utils/unify-ais-unit';
 
 export interface UpdateAisUnitUseCaseInput {
   userId: string;
@@ -26,7 +27,8 @@ export class UpdateAisUnitUseCase
   constructor(
     private readonly experienceRepositoryFactory: ExperienceRepositoryFactory,
     private readonly aisUnitsRepository: AisUnitsRepository,
-    private readonly embeddingsService: EmbeddingsService,
+    // Embedding generation disabled
+    // private readonly embeddingsService: EmbeddingsService,
   ) {}
 
   async execute(input: UpdateAisUnitUseCaseInput): Promise<AisUnitResponse> {
@@ -48,7 +50,8 @@ export class UpdateAisUnitUseCase
       skills: input.aisUnit.skills,
     });
 
-    await this.regenerateEmbeddingIfNeeded(updatedAisUnit, previousAction);
+    // Embedding generation disabled
+    // await this.regenerateEmbeddingIfNeeded(updatedAisUnit, previousAction);
 
     return mapAisUnitToResponse(updatedAisUnit);
   }
@@ -72,36 +75,37 @@ export class UpdateAisUnitUseCase
     }
   }
 
-  /**
-   * Regenerate embedding if the action field changed
-   * Uses unified text directly without enrichment
-   */
-  private async regenerateEmbeddingIfNeeded(
-    aisUnit: AisUnitResponse,
-    previousAction?: string,
-  ): Promise<void> {
-    try {
-      const currentAction = aisUnit.action?.trim();
-      if (!currentAction) {
-        return;
-      }
+  // Embedding generation disabled
+  // /**
+  //  * Regenerate embedding if the action field changed
+  //  * Uses unified text directly without enrichment
+  //  */
+  // private async regenerateEmbeddingIfNeeded(
+  //   aisUnit: AisUnitResponse,
+  //   previousAction?: string,
+  // ): Promise<void> {
+  //   try {
+  //     const currentAction = aisUnit.action?.trim();
+  //     if (!currentAction) {
+  //       return;
+  //     }
 
-      if (previousAction && previousAction === currentAction) {
-        return;
-      }
+  //     if (previousAction && previousAction === currentAction) {
+  //       return;
+  //     }
 
-      const unifiedText = unifyAisUnitToText(aisUnit);
+  //     const unifiedText = unifyAisUnitToText(aisUnit);
 
-      if (!unifiedText?.trim()) {
-        this.logger.warn(`Empty unified text for AIS unit ${aisUnit.id}`);
-        return;
-      }
+  //     if (!unifiedText?.trim()) {
+  //       this.logger.warn(`Empty unified text for AIS unit ${aisUnit.id}`);
+  //       return;
+  //     }
 
-      const { embedding, model } = await this.embeddingsService.generateEmbedding(unifiedText);
+  //     const { embedding, model } = await this.embeddingsService.generateEmbedding(unifiedText);
 
-      await this.aisUnitsRepository.updateEmbedding(aisUnit.id, embedding, model);
-    } catch (error) {
-      this.logger.error(`Failed to generate embedding for AIS unit ${aisUnit.id}:`, error);
-    }
-  }
+  //     await this.aisUnitsRepository.updateEmbedding(aisUnit.id, embedding, model);
+  //   } catch (error) {
+  //     this.logger.error(`Failed to generate embedding for AIS unit ${aisUnit.id}:`, error);
+  //   }
+  // }
 }

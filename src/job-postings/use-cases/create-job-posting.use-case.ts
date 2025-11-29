@@ -7,7 +7,6 @@ import { CreateJobPostingInput } from '../dto/create-job-posting.input';
 import { JobPostingResponse } from '../dto/job-posting.response';
 import { JobPostingsRepository } from '../repositories/job-postings.repository';
 import { JobPostingStatus } from '../entities/job-posting.entity';
-// import { EmbeddingQueue } from '@/embeddings/queues/embedding.queue';
 import { EmbeddingsService } from '@/embeddings/embeddings.service';
 import { jobPostingSummarySystemPrompt } from '../prompts/job-posting-summary.prompt';
 
@@ -25,7 +24,6 @@ export class CreateJobPostingUseCase
 
   constructor(
     private readonly jobPostingsRepository: JobPostingsRepository,
-    // private readonly embeddingQueue: EmbeddingQueue,
     private readonly embeddingsService: EmbeddingsService,
     private readonly configService: ConfigService,
   ) {
@@ -36,101 +34,113 @@ export class CreateJobPostingUseCase
   async execute(
     input: CreateJobPostingUseCaseInput,
   ): Promise<JobPostingResponse> {
-    const jobPosting = await this.jobPostingsRepository.createJobPosting(
-      {
-        rawText: input.rawText,
-        status: JobPostingStatus.PROCESSING,
-      },
-      input.userId,
-    );
+    const jobPosting = await this.createProcessingJobPosting(input);
+
+    if (!this.hasValidRawText(input.rawText)) {
+      await this.markJobPostingAsFailed(jobPosting.id, input.userId);
+      return this.buildResponse(jobPosting, JobPostingStatus.FAILED);
+    }
 
     try {
-      if (!input.rawText || input.rawText.trim().length === 0) {
-        await this.jobPostingsRepository.update(
-          { id: jobPosting.id, userId: input.userId },
-          { status: JobPostingStatus.FAILED },
-        );
-        return {
-          id: jobPosting.id,
-          userId: jobPosting.userId,
-          rawText: jobPosting.rawText,
-          status: JobPostingStatus.FAILED,
-          summaryJson: jobPosting.summaryJson,
-          createdAt: jobPosting.createdAt,
-          updatedAt: jobPosting.updatedAt,
-        };
-      }
-
-      this.logger.log(`Generating embedding for job posting ${jobPosting.id}`);
-      const { embedding, model } = await this.embeddingsService.generateEmbedding(input.rawText);
-
-      await this.jobPostingsRepository.update(
-        { id: jobPosting.id, userId: input.userId },
-        {
-          embedding,
-          embeddingModel: model,
-        },
-      );
-
-      this.logger.log(`Generating LLM summary for job posting ${jobPosting.id}`);
-      const summaryJson = await this.generateSummaryWithLLM(input.rawText);
-
-      await this.jobPostingsRepository.update(
-        { id: jobPosting.id, userId: input.userId },
-        {
-          summaryJson,
-          status: JobPostingStatus.DONE,
-        },
-      );
-
-      this.logger.log(`Successfully processed job posting ${jobPosting.id}`);
-
+      await this.processJobPosting(jobPosting.id, input);
       const updatedJobPosting = await this.jobPostingsRepository.findByIdAndUserId(
         jobPosting.id,
         input.userId,
       );
-
-      return {
-        id: updatedJobPosting!.id,
-        userId: updatedJobPosting!.userId,
-        rawText: updatedJobPosting!.rawText,
-        status: updatedJobPosting!.status,
-        summaryJson: updatedJobPosting!.summaryJson,
-        createdAt: updatedJobPosting!.createdAt,
-        updatedAt: updatedJobPosting!.updatedAt,
-      };
+      return this.buildResponse(updatedJobPosting!, JobPostingStatus.DONE);
     } catch (error) {
       this.logger.error(
         `Failed to process job posting ${jobPosting.id}: ${error.message}`,
         error.stack,
       );
 
-      try {
-        await this.jobPostingsRepository.update(
-          { id: jobPosting.id, userId: input.userId },
-          { status: JobPostingStatus.FAILED },
-        );
-      } catch (updateError) {
-        this.logger.error(
-          `Failed to update job posting status to FAILED: ${updateError.message}`,
-        );
-      }
-
+      await this.markJobPostingAsFailed(jobPosting.id, input.userId);
       const failedJobPosting = await this.jobPostingsRepository.findByIdAndUserId(
         jobPosting.id,
         input.userId,
       );
-
-      return {
-        id: failedJobPosting!.id,
-        userId: failedJobPosting!.userId,
-        rawText: failedJobPosting!.rawText,
-        status: failedJobPosting!.status,
-        summaryJson: failedJobPosting!.summaryJson,
-        createdAt: failedJobPosting!.createdAt,
-        updatedAt: failedJobPosting!.updatedAt,
-      };
+      return this.buildResponse(failedJobPosting!, JobPostingStatus.FAILED);
     }
+  }
+
+  private async createProcessingJobPosting(
+    input: CreateJobPostingUseCaseInput,
+  ): Promise<JobPostingResponse> {
+    return this.jobPostingsRepository.createJobPosting(
+      {
+        rawText: input.rawText,
+        status: JobPostingStatus.PROCESSING,
+      },
+      input.userId,
+    );
+  }
+
+  private hasValidRawText(rawText?: string): boolean {
+    return Boolean(rawText && rawText.trim().length > 0);
+  }
+
+  private async processJobPosting(
+    jobPostingId: string,
+    input: CreateJobPostingUseCaseInput,
+  ) {
+    // First, generate summary with enriched description
+    this.logger.log(`Generating LLM summary for job posting ${jobPostingId}`);
+    const summaryJson = await this.generateSummaryWithLLM(input.rawText);
+
+    // Extract enriched description from summary
+    const enrichedDescription = (summaryJson.description as string) || input.rawText;
+
+    if (!enrichedDescription?.trim()) {
+      throw new Error('Summary did not return a valid description');
+    }
+
+    // Embed the enriched description using large model
+    this.logger.log(`Generating embedding for job posting ${jobPostingId} (large model)`);
+    const { embedding, model } = await this.embeddingsService.generateEmbedding(
+      enrichedDescription,
+    );
+
+    await this.jobPostingsRepository.updateEmbedding(
+      jobPostingId,
+      input.userId,
+      embedding,
+      model,
+    );
+
+    await this.jobPostingsRepository.update(
+      { id: jobPostingId, userId: input.userId },
+      { summaryJson, status: JobPostingStatus.DONE },
+    );
+
+    this.logger.log(`Successfully processed job posting ${jobPostingId}`);
+  }
+
+  private async markJobPostingAsFailed(id: string, userId: string) {
+    try {
+      await this.jobPostingsRepository.update(
+        { id, userId },
+        { status: JobPostingStatus.FAILED },
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to update job posting ${id} status to FAILED: ${error.message}`,
+      );
+    }
+  }
+
+  private buildResponse(
+    jobPosting: JobPostingResponse,
+    status: JobPostingStatus,
+  ): JobPostingResponse {
+    return {
+      id: jobPosting.id,
+      userId: jobPosting.userId,
+      rawText: jobPosting.rawText,
+      status,
+      summaryJson: jobPosting.summaryJson,
+      createdAt: jobPosting.createdAt,
+      updatedAt: jobPosting.updatedAt,
+    };
   }
 
   private async generateSummaryWithLLM(

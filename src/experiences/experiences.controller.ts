@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Sse } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Sse } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiExtraModels,
@@ -14,11 +14,15 @@ import { CurrentUser } from '@/auth/decorators/current-user.decorator';
 import { UserResponseDto } from '@/users/dto/user-response.dto';
 import { ListExperiencesUseCase } from '@/experiences/use-cases/list-experiences.use-case';
 import { ListAllExperiencesUseCase } from '@/experiences/use-cases/list-all-experiences.use-case';
+import { ListExperienceSummaryUseCase } from '@/experiences/use-cases/list-experience-summary.use-case';
 import { CreateExperienceUseCase } from '@/experiences/use-cases/create-experience.use-case';
 import { UpdateExperienceUseCase } from '@/experiences/use-cases/update-experience.use-case';
+import { DeleteExperienceUseCase } from '@/experiences/use-cases/delete-experience.use-case';
 import { ListExperiencesParamsDto } from '@/experiences/dto/list-experiences.params';
+import { DeleteExperienceParamsDto } from '@/experiences/dto/delete-experience.params';
 import { CreateExperienceInput } from '@/experiences/dto/create-experience.input';
 import { ExperienceSummary } from '@/experiences/dto/experience-summary.dto';
+import { ExperienceSummaryWithSkills } from '@/experiences/dto/experience-summary-with-skills.dto';
 import { ExperienceWithAisUnitsResponseDto } from '@/experiences/dto/experience-with-ais-units.response';
 import { AllExperiencesResponseDto } from '@/experiences/dto/all-experiences.response';
 import { AisUnitResponse } from '@/experiences/dto/ais-unit/ais-unit.response';
@@ -32,26 +36,29 @@ import { GenerateAisUnitsFromDescriptionUseCase } from '@/experiences/use-cases/
 
 @ApiTags('experiences')
 @ApiBearerAuth('JWT-auth')
-@ApiExtraModels(
-  ApiResponseDto,
-  ExperienceSummary,
-  ExperienceWithAisUnitsResponseDto,
-  AllExperiencesResponseDto,
-  CreateExperienceInput,
-  CreateWorkExperienceInput,
-  CreateProjectExperienceInput,
-  CreateAcademicExperienceInput,
-  CreateAisUnitInput,
-  AisUnitResponse,
-  GenerateAisUnitsInput,
-)
+  @ApiExtraModels(
+    ApiResponseDto,
+    ExperienceSummary,
+    ExperienceSummaryWithSkills,
+    ExperienceWithAisUnitsResponseDto,
+    AllExperiencesResponseDto,
+    CreateExperienceInput,
+    CreateWorkExperienceInput,
+    CreateProjectExperienceInput,
+    CreateAcademicExperienceInput,
+    CreateAisUnitInput,
+    AisUnitResponse,
+    GenerateAisUnitsInput,
+  )
 @Controller('experiences')
 export class ExperiencesController {
   constructor(
     private readonly listExperiencesUseCase: ListExperiencesUseCase,
     private readonly listAllExperiencesUseCase: ListAllExperiencesUseCase,
+    private readonly listExperienceSummaryUseCase: ListExperienceSummaryUseCase,
     private readonly createExperienceUseCase: CreateExperienceUseCase,
     private readonly updateExperienceUseCase: UpdateExperienceUseCase,
+    private readonly deleteExperienceUseCase: DeleteExperienceUseCase,
     private readonly generateAisUnitsFromDescriptionUseCase: GenerateAisUnitsFromDescriptionUseCase,
   ) {}
 
@@ -72,6 +79,27 @@ export class ExperiencesController {
     return {
       data: result,
       message: 'All experiences retrieved successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
+    };
+  }
+
+  @Get('list-experience-summary')
+  @ApiOperation({ summary: 'List all experiences with aggregated skills (without AIS units)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Experience summaries with skills retrieved successfully',
+    type: ApiResponseDto,
+  })
+  async listExperienceSummary(
+    @CurrentUser() user: UserResponseDto,
+  ): Promise<ApiResponseDto<ExperienceSummaryWithSkills[]>> {
+    const experiences = await this.listExperienceSummaryUseCase.execute({
+      userId: user.id,
+    });
+
+    return {
+      data: experiences,
+      message: 'Experience summaries with skills retrieved successfully',
       statusCode: STATUS_CODES.SUCCESSFUL.OK,
     };
   }
@@ -155,6 +183,30 @@ export class ExperiencesController {
     return {
       data,
       message: 'Experience updated successfully',
+      statusCode: STATUS_CODES.SUCCESSFUL.OK,
+    };
+  }
+
+  @Delete(':experienceType/:experienceId')
+  @ApiOperation({ summary: 'Delete an experience and all its AIS units' })
+  @ApiResponse({
+    status: 200,
+    description: 'Experience deleted successfully',
+    type: ApiResponseDto,
+  })
+  async deleteExperience(
+    @CurrentUser() user: UserResponseDto,
+    @Param() params: DeleteExperienceParamsDto,
+  ): Promise<ApiResponseDto<void>> {
+    await this.deleteExperienceUseCase.execute({
+      userId: user.id,
+      experienceId: params.experienceId,
+      experienceType: params.experienceType,
+    });
+
+    return {
+      data: undefined,
+      message: 'Experience deleted successfully',
       statusCode: STATUS_CODES.SUCCESSFUL.OK,
     };
   }

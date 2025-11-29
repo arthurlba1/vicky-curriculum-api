@@ -7,8 +7,9 @@ import { CreateAisUnitInput } from '@/experiences/dto/ais-unit/create-ais-unit.i
 import { AisUnitResponse } from '@/experiences/dto/ais-unit/ais-unit.response';
 import { AisUnitsRepository } from '@/experiences/repositories/ais-units.repository';
 import { mapAisUnitToResponse } from '@/experiences/mappers/experience.mapper';
-import { EmbeddingsService } from '@/embeddings/embeddings.service';
-import { unifyAisUnitToText } from '@/experiences/utils/unify-ais-unit';
+// Embedding generation disabled
+// import { EmbeddingsService } from '@/embeddings/embeddings.service';
+// import { unifyAisUnitToText } from '@/experiences/utils/unify-ais-unit';
 
 export interface CreateAisUnitUseCaseInput {
   userId: string;
@@ -26,7 +27,8 @@ export class CreateAisUnitUseCase
   constructor(
     private readonly experienceRepositoryFactory: ExperienceRepositoryFactory,
     private readonly aisUnitsRepository: AisUnitsRepository,
-    private readonly embeddingsService: EmbeddingsService,
+    // Embedding generation disabled
+    // private readonly embeddingsService: EmbeddingsService,
   ) {}
 
   async execute(input: CreateAisUnitUseCaseInput): Promise<AisUnitResponse> {
@@ -38,7 +40,8 @@ export class CreateAisUnitUseCase
       experienceType: input.experienceType,
     });
 
-    await this.generateEmbedding(aisUnit);
+    // Embedding generation disabled
+    // await this.generateEmbedding(aisUnit);
 
     return mapAisUnitToResponse(aisUnit);
   }
@@ -58,21 +61,22 @@ export class CreateAisUnitUseCase
     }
   }
 
-  private async generateEmbedding(aisUnit: AisUnitResponse) {
-    try {
-      const unifiedText = unifyAisUnitToText(aisUnit);
+  // Embedding generation disabled
+  // private async generateEmbedding(aisUnit: AisUnitResponse) {
+  //   try {
+  //     const unifiedText = unifyAisUnitToText(aisUnit);
 
-      if (!unifiedText?.trim()) {
-        this.logger.warn(`Empty unified text for AIS unit ${aisUnit.id}`);
-        return;
-      }
+  //     if (!unifiedText?.trim()) {
+  //       this.logger.warn(`Empty unified text for AIS unit ${aisUnit.id}`);
+  //       return;
+  //     }
 
-      const { embedding, model } = await this.embeddingsService.generateEmbedding(
-        unifiedText,
-      );
-      await this.aisUnitsRepository.updateEmbedding(aisUnit.id, embedding, model);
-    } catch (error) {
-      this.logger.error(`Failed to generate embedding for AIS unit ${aisUnit.id}:`, error);
-    }
-  }
+  //     const { embedding, model } = await this.embeddingsService.generateEmbedding(
+  //       unifiedText,
+  //     );
+  //     await this.aisUnitsRepository.updateEmbedding(aisUnit.id, embedding, model);
+  //   } catch (error) {
+  //     this.logger.error(`Failed to generate embedding for AIS unit ${aisUnit.id}:`, error);
+  //   }
+  // }
 }
